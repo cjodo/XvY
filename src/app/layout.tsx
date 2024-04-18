@@ -1,5 +1,5 @@
 import "~/styles/globals.css";
-
+import Link from "next/link";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
@@ -13,6 +13,21 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+function Header() {
+  return (
+    <header className="w-full text-xl flex bg-blue-900 p-6 shadow-md">
+      <nav className="flex w-full justify-between">
+        <div className="flex gap-5">
+          <Link href={"#"}>Home</Link>
+          <Link href={"#"}>Graphs</Link>
+        </div>
+
+        <Link href={"#"}>Sign In</Link>
+      </nav>
+    </header>
+  )
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -20,7 +35,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>{children}</body>
+      <body className={`font-sans ${inter.variable}`}>
+        <Header/>
+        {children}
+      </body>
     </html>
   );
 }
