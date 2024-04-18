@@ -16,7 +16,7 @@ export const metadata = {
 function Header() {
   return (
     <header className="w-full text-xl flex bg-blue-900 p-6 shadow-md">
-      <nav className="flex w-full justify-between">
+      <nav className="flex w-full justify-between text-violet-100">
         <div className="flex gap-5">
           <Link href={"#"}>Home</Link>
           <Link href={"#"}>Graphs</Link>
