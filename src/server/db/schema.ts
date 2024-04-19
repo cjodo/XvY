@@ -8,6 +8,7 @@ import {
   serial,
   timestamp,
   varchar,
+  json
 } from "drizzle-orm/pg-core";
 
 /**
@@ -19,10 +20,12 @@ import {
 export const createTable = pgTableCreator((name) => `xvy-example_${name}`);
 
 export const posts = createTable(
-  "post",
+  "graph",
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
+    data: json("data")
+      .notNull(),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
