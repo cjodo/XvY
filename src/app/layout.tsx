@@ -2,6 +2,10 @@ import "~/styles/globals.css";
 import Link from "next/link";
 import { Inter } from "next/font/google";
 
+import { Header } from "~/_components/Header";
+
+import { ClerkProvider } from "@clerk/nextjs";
+
 export const dynamic = "force-dynamic" //Force page to refresh every visit... Instead of using cached page
 
 const inter = Inter({
@@ -10,25 +14,10 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "xvy",
+  title: "XvY",
   description: "Compare data from many sources",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
-
-function Header() {
-  return (
-    <header className="w-full text-xl flex bg-blue-900 p-6 shadow-md">
-      <nav className="flex w-full justify-between text-violet-100">
-        <div className="flex gap-5">
-          <Link href={"/"}>Home</Link>
-          <Link href={"/add-graph"}>Graphs</Link>
-        </div>
-
-        <Link href={"#"}>Sign In</Link>
-      </nav>
-    </header>
-  )
-}
 
 export default function RootLayout({
   children,
@@ -36,11 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    <ClerkProvider>
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
+      <body className={`font-sans ${inter.variable} bg-gray-600`}>
         <Header/>
         {children}
       </body>
     </html>
+    </ClerkProvider>
   );
 }
