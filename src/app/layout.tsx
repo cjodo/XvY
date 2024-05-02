@@ -2,9 +2,10 @@ import "~/styles/globals.css";
 import Link from "next/link";
 import { Inter } from "next/font/google";
 
-import { Header } from "~/_components/Header";
+import { Header } from "~/_components/Header/Header";
 
 import { ClerkProvider } from "@clerk/nextjs";
+import { Footer } from "~/_components/Footer/Footer";
 
 export const dynamic = "force-dynamic" //Force page to refresh every visit... Instead of using cached page
 
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className={`font-sans ${inter.variable} bg-gray-600`}>
         <Header/>
         {children}
+        <Footer />
       </body>
     </html>
     </ClerkProvider>

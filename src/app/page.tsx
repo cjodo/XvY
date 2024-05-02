@@ -1,3 +1,4 @@
+import { Graph } from "~/_components/Graph/Graph";
 import { db } from "~/server/db";
 
 export default async function HomePage() {
@@ -6,8 +7,8 @@ export default async function HomePage() {
   console.log(graphs)
 
   return (
-    <main className="flex flex-wrap gap-4 p-5">
-      <h1 className="text-xl text-slate-50 w-1/4">Home Page!!</h1>
+    <main className="p-5 min-h-[calc(100vh-76px-84px)]"> 
+      <Graph />
     </main>
   );
 }
