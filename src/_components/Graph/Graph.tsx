@@ -1,11 +1,10 @@
-import { hasGithubConnected } from "~/utils/hasGithubConnected";
-import { getGithubUserData } from "~/utils/getGithubUserData";
-
-import { LineChart } from "./LineChart";
+import { BarChart } from "./BarChart";
 import { currentUser } from "@clerk/nextjs/server";
 import { SignInButton } from "@clerk/nextjs";
 
 import { ClerkUserData, GithubUserData } from "~/types";
+import { hasGithubConnected } from "~/utils/hasGithubConnected";
+import { getGithubUserData, getUserEvents, getRepos, getCommitsPerRepo } from "~/utils/getGithubUserData";
 
 // eventually we'll be passing in the data to be rendered from github, not sure how to go about that yet
 export const Graph = async () => {
@@ -23,13 +22,18 @@ export const Graph = async () => {
 
 	const UserData: GithubUserData = await getGithubUserData(user)
 
-	console.log(UserData.items[0].login)
+	const userName = UserData.items[0].login
+
+	const eventData = await getUserEvents(userName)
+	const repos = await getRepos(userName)
+
+	console.log(repos)
 
 	return (
 		<div className="flex w-full my-auto justify-center">
 			<div className="flex flex-col text-center">
 			<h2 className="mb-4 text-white">{UserData.items[0].login}: Github Data</h2>
-				<LineChart />
+				<BarChart data={eventData} />
 			</div>
 
 		</div>
