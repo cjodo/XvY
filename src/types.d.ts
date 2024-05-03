@@ -6,7 +6,17 @@ interface GithubUserData {
   }
 }
 
+interface GitEvent {
+	id: string,
+	type: "PushEvent" | "IssuesEvent" | "WatchEvent",
+	actor: string,
+  repo: {
+    name:string
+  },
+}
+
 export {
   User as ClerkUserData,
-  GithubUserData
+  GithubUserData,
+  GitEvent
 }
