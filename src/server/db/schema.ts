@@ -27,9 +27,8 @@ export const users = createTable(
     first_name: varchar('name').notNull(),
     last_name: varchar('name').notNull(),
     username: varchar('username').notNull(),
-    age: varchar('age').notNull(),
+    age: varchar('age'),
     email: varchar('email').notNull().unique(),
-    gh_api_key: varchar('gh_api_key').notNull().unique()
   }
 )
 
