@@ -70,7 +70,8 @@ export async function POST(req: Request) {
       last_name: last_name,
       username: username,
       email: email_addresses[0]
-    }),
+    })
+
   }
 
   return new Response('', { status: 200 })
