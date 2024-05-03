@@ -23,10 +23,11 @@ export const createTable = pgTableCreator((name) => `xvy-example_${name}`);
 export const users = createTable(
   "users",
   {
-    id: uuid('id').primaryKey(),
+    id: uuid('id').primaryKey().defaultRandom().unique(),
     first_name: varchar('first_name').notNull(),
     last_name: varchar('last_name').notNull(),
     username: varchar('username').notNull(),
+    gh_username: varchar('gh_username').unique(),
     age: varchar('age'),
     email: varchar('email').notNull().unique(),
   }

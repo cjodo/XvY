@@ -7,7 +7,7 @@ export default async function HomePage() {
   console.log(graphs)
 
   return (
-    <main className="p-5 min-h-[calc(100vh-76px-84px)]"> 
+    <main className="p-5 min-h-[calc(100vh-76px-100px)] justify-center align-center"> 
       <Graph />
     </main>
   );

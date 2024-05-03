@@ -1,4 +1,7 @@
+'use client'
+
 import { useUser } from "@clerk/nextjs"
+import { SignInButton } from "@clerk/nextjs";
 
 import React from 'react';
 import { letterFrequency } from '@visx/mock-data';
@@ -8,6 +11,10 @@ import { scaleLinear, scaleBand } from '@visx/scale';
 
 // We'll use some mock data from `@visx/mock-data` for this.
 const data = letterFrequency;
+
+const getData = async () => {
+
+}
 
 // Define the graph dimensions and margins
 const width = 500;
@@ -41,16 +48,13 @@ const xPoint = compose(xScale, x);
 const yPoint = compose(yScale, y);
 
 export const LineChart = () => {
-	const {isSignedIn, isLoaded, user } = useUser()
+	
+	const {isSignedIn, isLoaded } = useUser()
 
-	const hasGithubConnected = () => {
-		return user?.externalAccounts.find((acc) => acc.provider === 'github') 
-	}
 
-	if(!isLoaded) return <p>...Loading</p>
-	if(!isSignedIn) return <p>Please Sign In</p>
-
-	if(!hasGithubConnected()) return <p>Please Connect Your Github Account</p>
+	if(!isLoaded) return <p className="w-full text-center">...Loading</p>
+	if(!isSignedIn) return ( 
+	)
 
 
 	return (
