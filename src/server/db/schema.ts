@@ -24,8 +24,8 @@ export const users = createTable(
   "users",
   {
     id: uuid('id').primaryKey(),
-    first_name: varchar('name').notNull(),
-    last_name: varchar('name').notNull(),
+    first_name: varchar('first_name').notNull(),
+    last_name: varchar('last_name').notNull(),
     username: varchar('username').notNull(),
     age: varchar('age'),
     email: varchar('email').notNull().unique(),
