@@ -6,6 +6,7 @@ import {
   index,
   pgTableCreator,
   serial,
+  uuid,
   timestamp,
   varchar,
   json
@@ -18,6 +19,19 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `xvy-example_${name}`);
+
+export const users = createTable(
+  "users",
+  {
+    id: uuid('id').primaryKey(),
+    first_name: varchar('name').notNull(),
+    last_name: varchar('name').notNull(),
+    username: varchar('username').notNull(),
+    age: varchar('age').notNull(),
+    email: varchar('email').notNull().unique(),
+    gh_api_key: varchar('gh_api_key').notNull().unique()
+  }
+)
 
 export const posts = createTable(
   "graph",

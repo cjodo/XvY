@@ -1,6 +1,8 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
+import { db } from '~/server/db'
+import { users } from '~/server/db/schema'
 
 export async function POST(req: Request) {
 
@@ -51,12 +53,26 @@ export async function POST(req: Request) {
   // For this guide, you simply log the payload to the console
   const { id } = evt.data;
   const eventType = evt.type;
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
-  console.log('Webhook body:', body)
 
-		if(evt.type === 'user.created'){
-				console.log('userId: ', evt.data.id)
-		}
+  if(evt.type === 'user.created'){
+    console.log('userId: ', evt.data.id)
+    
+    evt.data.email_addresses
+
+    const {
+      first_name,
+      last_name,
+      username,
+      email_addresses
+    } = evt.data
+
+    db.insert(users).values({
+      first_name: first_name, 
+      last_name: last_name,
+      username: username,
+      email: email_addresses[0]
+    })
+  }
 
   return new Response('', { status: 200 })
 }
