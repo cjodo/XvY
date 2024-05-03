@@ -56,8 +56,6 @@ export async function POST(req: Request) {
 
   if(evt.type === 'user.created'){
     console.log('userId: ', evt.data.id)
-    
-    evt.data.email_addresses
 
     const {
       first_name,
@@ -66,12 +64,14 @@ export async function POST(req: Request) {
       email_addresses
     } = evt.data
 
-    db.insert(users).values({
+    let newUser = db.insert(users).values({
       first_name: first_name, 
       last_name: last_name,
       username: username,
       email: email_addresses[0]
     })
+
+    console.log(`New User: ${newUser}`)
   }
 
   return new Response('', { status: 200 })
