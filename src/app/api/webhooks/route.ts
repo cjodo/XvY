@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       email_addresses
     } = evt.data
 
-    let newUser = db.insert(users).values({
+    let newUser = await db.insert(users).values({
       first_name: first_name, 
       last_name: last_name,
       username: username,
