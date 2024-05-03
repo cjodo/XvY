@@ -53,9 +53,6 @@ export const LineChart = () => {
 
 
 	if(!isLoaded) return <p className="w-full text-center">...Loading</p>
-	if(!isSignedIn) return ( 
-	)
-
 
 	return (
 		<div> 
