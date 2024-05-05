@@ -23,7 +23,7 @@ export const Graph = async () => {
 	if(!hasGithubConnected(user)) return <p className="w-full text-center">Please Connect Your Github Account</p>
 
 	const UserData: GithubUserData = await getGithubUserData(user)
-	const userName = UserData.items[0].login
+	const userName = await UserData.items[0].login
 
 	const eventData = await getUserEvents(userName)
 	const repos = await getRepos(userName)

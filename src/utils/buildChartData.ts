@@ -1,10 +1,6 @@
 import { GitRepoData, CommitData } from "~/types"
 import { getCommitsPerRepo } from "./getGithubUserData";
 
-
-//TODO: Implement some sort of caching so the data is not relient on the github api calls
-
-
 export const buildCommitData = (data: GitRepoData[]) => {
   let commits:CommitData[] = []; 
 
