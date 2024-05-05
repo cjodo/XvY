@@ -11,7 +11,12 @@ const config = {
   },
   eslint: {
     ignoreDuringBuilds: true,
-  }
+  },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
 };
 
 export default config;

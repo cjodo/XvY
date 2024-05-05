@@ -7,16 +7,14 @@ import { Header } from "~/_components/Header/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Footer } from "~/_components/Footer/Footer";
 
-export const dynamic = "force-dynamic" //Force page to refresh every visit... Instead of using cached page
-
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
 export const metadata = {
-  title: "XvY",
-  description: "Compare data from many sources",
+  title: "GitXY",
+  description: "Visualize various github data. using public data",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

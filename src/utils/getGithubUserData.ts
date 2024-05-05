@@ -9,22 +9,20 @@ export const getGithubUserData = async (user: ClerkUserData | null) => {
 }
 
 export const getUserEvents = async (userName: string) => {
-
-	const res = await fetch(`https://api.github.com/users/${userName}/events`)
+	const res = await fetch(`https://api.github.com/users/${userName}/events`, { cache: 'force-cache' })
 	const events = await res.json()
 
 	return events
 }
 
 export const getRepos = async (userName:string) => {
-	const res = await fetch(`https://api.github.com/users/${userName}/repos`)
+	const res = await fetch(`https://api.github.com/users/${userName}/repos`, { cache: "force-cache" })
 	const commits = await res.json()
 
 	return commits
 }
 export const getCommitsPerRepo = async (repoName: string, userName: string) => {
-	const res = await fetch(`	api.github.com/repos/${userName}/${repoName}/commits?author=${userName}`)
-
+	const res = await fetch(`https://api.github.com/repos/${userName}/${repoName}/commits?author=${userName}`, { cache: "force-cache" })
 	const commits = await res.json()
 
 	return commits

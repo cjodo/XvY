@@ -15,8 +15,24 @@ interface GitEvent {
   },
 }
 
+interface GitRepoData {
+  id: string,
+  name: string,
+  full_name: string,
+  owner : {
+    login: string
+  }
+}
+
+interface CommitData {
+  name:string,
+  amount: number
+}
+
 export {
   User as ClerkUserData,
   GithubUserData,
-  GitEvent
+  GitEvent,
+  GitRepoData,
+  CommitData
 }

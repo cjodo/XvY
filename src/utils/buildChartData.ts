@@ -1,20 +1,19 @@
-import { GitEvent } from "~/types"
+import { GitRepoData, CommitData } from "~/types"
+import { getCommitsPerRepo } from "./getGithubUserData";
 
 
-const tallyCommitsPerRepo = (data: GitEvent[]): { repo: string; commits: number }[] => {
-  const commitsPerRepo: { [repo: string]: number } = {};
+//TODO: Implement some sort of caching so the data is not relient on the github api calls
 
-  data.forEach(event => {
-    if (event.type === "PushEvent") {
-      const repoName = event.repo.name;
-      commitsPerRepo[repoName] = (commitsPerRepo[repoName] || 0) + 1;
-    }
-  });
 
-  return Object.entries(commitsPerRepo).map(([repo, commits]) => ({ repo, commits }));
+export const buildCommitData = (data: GitRepoData[]) => {
+  let commits:CommitData[] = []; 
+
+  data.forEach(async (repo: GitRepoData) => {
+    const repoData = await getCommitsPerRepo(repo.name, repo.owner.login)
+
+    const amountOfCommits: number = repoData.length
+
+    commits.push({name: repo.name, amount: amountOfCommits})
+  })
+  return commits
 };
-
-
-export const buildCommitData = (data: GitEvent[]) => {
-	return tallyCommitsPerRepo(data);
-}
