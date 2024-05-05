@@ -41,7 +41,7 @@ export const Graph = async () => {
 	return (
 		<div className="flex w-full my-auto justify-center">
 			<div className="flex flex-col text-center">
-			<h2 className="mb-4 text-white">{UserData.items[0].login}: Github Data</h2>
+			<h2 className="mb-4 text-white">{userName}: Github Commits per repo</h2>
 				<BarChart data={commits} />
 			</div>
 
