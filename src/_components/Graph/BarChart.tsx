@@ -99,6 +99,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 				stroke='#ffffff'
 				left={margin.left}
 				label="Number of Commits"
+				tickLabelProps={{fill:"#ffffff"}}
 				tickStroke='#ffffff'
 			/>
 		</svg>
