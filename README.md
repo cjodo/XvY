@@ -1,3 +1,13 @@
+## Installation:
+
+```
+git clone [https://github.com/CodingGeeneeus/XvY](https://github.com/CodingGeeneeus/XvY) 
+cd XvY
+npm install
+```
+
+
+
 ## TODO
 - [  ] GH Authentication key
 - [  ] Tooltip on hover instead of axis labels (maybe)
