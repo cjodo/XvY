@@ -1,7 +1,7 @@
 ## Installation:
 
 ```
-git clone [https://github.com/CodingGeeneeus/XvY](https://github.com/CodingGeeneeus/XvY) 
+git clone https://github.com/CodingGeeneeus/XvY
 cd XvY
 npm install
 ```
