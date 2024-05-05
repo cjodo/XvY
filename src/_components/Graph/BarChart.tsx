@@ -7,19 +7,22 @@ import { Group } from '@visx/group';
 import { Bar } from '@visx/shape';
 import { scaleLinear, scaleBand } from '@visx/scale';
 import { AxisBottom, AxisLeft, TickLabelProps } from '@visx/axis'
+import { LineProps } from '@visx/shape/lib/shapes/Line';
 
 import { CommitData } from '~/types';
+import { set } from 'zod';
 
 interface LineChartProps {
 	data: CommitData[],
 }
 
+
 export const BarChart = ({ data }: LineChartProps) => {
 
-	
+	const [fill, setFill] = useState("#CC5500")
+
 	console.log(data)
 	const { isLoaded } = useUser()
-
 
 	const margin = {
 		top: 10,
@@ -32,60 +35,73 @@ export const BarChart = ({ data }: LineChartProps) => {
 	const height = 600
 
 	const xScale = scaleBand({
-    range: [margin.left, width - margin.right],
-    domain: data.map(d => d.name),
-    padding: 0.2,
-  });
+		range: [margin.left, width - margin.right],
+		domain: data.map(d => d.name),
+		padding: 0.2,
+	});
 
-  const yScale = scaleLinear({
-    range: [height - margin.bottom, margin.top],
-    domain: [0, Math.max(...data.map(d => d.amount))],
-  });
+	const yScale = scaleLinear({
+		range: [height - margin.bottom, margin.top],
+		domain: [0, Math.max(...data.map(d => d.amount))],
+	});
 
-	const tickLabelProps: TickLabelProps<any> = (tickValue, tickIndex) => 
+	const XtickLabelProps: TickLabelProps<any> = () => 
 		({
 			fill: "#ffffff",
 			fontSize: 12,
 			fontFamily: "sans-serif",
 			textAnchor: "start",
 			angle: 45
-		} as const)
+			} as const)
+	
+	const YtickLabelProps: TickLabelProps<any> = () => 
+		({
+			fill: "#ffffff",
+			fontSize: 12,
+			fontFamily: "sans-serif",
+			} as const)
+
 
 	if(!isLoaded) return <p className="w-full text-center">...Loading</p>
 
 	return (
-			<svg width={width} height={height}>
+		<svg width={width} height={height}>
 
-				<Group>
-					{data.map(d => (
-							<Bar
-								key={d.name}
-								x={xScale(d.name)}
-								y={yScale(d.amount)}
-								height={height - margin.bottom - yScale(d.amount)}
-								width={xScale.bandwidth()}
-								fill="#CC5500"
-							/>
-					))}
-				</Group>
+			<Group>
+				{data.map(d => (
+					<Bar
+						key={d.name}
+						x={xScale(d.name)}
+						y={yScale(d.amount)}
+						height={height - margin.bottom - yScale(d.amount)}
+						width={xScale.bandwidth()}
+						fill="#cc5500"
+						className='bar'
+					/>
+				))}
+			</Group>
 
 
-				{/* X-axis */}
-				<AxisBottom
-					scale={xScale}
-					top={height - margin.bottom}
-					left={margin.left}
-					tickLabelProps={tickLabelProps}
-				/>
+			{/* X-axis */}
+			<AxisBottom
+				scale={xScale}
+				top={height - margin.bottom}
+				left={margin.left}
+				stroke='#ffffff'
+				tickLabelProps={XtickLabelProps}
+				tickStroke='#ffffff'
+			/>
 
-				{/* Y-axis */}
-				<AxisLeft
-					scale={yScale}
-					top={margin.top}
-					left={margin.left}
-					label="Number of Commits"
-				/>
-			</svg>
+			{/* Y-axis */}
+			<AxisLeft
+				scale={yScale}
+				top={margin.top}
+				stroke='#ffffff'
+				left={margin.left}
+				label="Number of Commits"
+				tickStroke='#ffffff'
+			/>
+		</svg>
 	)
 }
 

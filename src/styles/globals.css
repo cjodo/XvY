@@ -6,3 +6,8 @@
 body {
 		@apply bg-slate-100
 }
+
+.bar:hover {
+	fill: #cc6600;
+}
+
