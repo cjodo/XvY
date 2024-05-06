@@ -28,7 +28,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 		top: 10,
 		right: 20,
 		bottom: 130,
-		left:60
+		left:20,
 	}
 
 	const width = 800
@@ -71,7 +71,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 				{data.map(d => (
 					<Bar
 						key={d.name}
-						x={xScale(d.name)}
+						x={(xScale(d.name) - margin.left ) - xScale.bandwidth() / 2} // Puts the bar in the middle of the tick
 						y={yScale(d.amount)}
 						height={height - margin.bottom - yScale(d.amount)}
 						width={xScale.bandwidth()}

@@ -58,6 +58,7 @@ export async function POST(req: Request) {
     console.log('userId: ', evt.data.id)
     console.log('user accounts: ', evt.data.external_accounts)
 
+
     const {
       first_name,
       last_name,
