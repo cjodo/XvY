@@ -25,12 +25,11 @@ export const Graph = async () => {
 	const UserData: GithubUserData = await getGithubUserData(user)
 	const userName = await UserData.items[0].login
 
-	const eventData = await getUserEvents(userName)
 	const repos = await getRepos(userName)
 
-	let commits:CommitData[] = []
+	let commits:CommitData[] = [];
 
-	// TODO Handle rate limiting. add the gh auth key to db and use that ( optional )
+	// add the gh auth key to db and use that ( optional )
 	if(!repos.message) {
 		commits = buildCommitData(repos)
 	} else {
