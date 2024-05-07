@@ -7,8 +7,14 @@ import { GitRepoData } from "~/types";
 import { ClerkUserData, GithubUserData, CommitData} from "~/types";
 
 import { hasGithubConnected } from "~/utils/hasGithubConnected";
-import { getGithubUserData } from "~/utils/getGithubUserData";
 
+export const getGithubUserData = async (user: ClerkUserData | null) => {
+	const userName = user?.username
+
+	const res = await fetch(`https://api.github.com/search/users?q=${userName}`, { next: {revalidate: 30} })
+	const data = await res.json()
+	return data
+}
 const getRepos = async (userName:string) => {
 	const res = await fetch(`https://api.github.com/users/${userName}/repos`, {next: { revalidate: 3600 }})
 	const commits = await res.json()
@@ -35,11 +41,9 @@ export const buildCommitData = (data: GitRepoData[]) => {
   return commits
 };
 
-const user: ClerkUserData | null = await currentUser();
-
-const userData: GithubUserData = await getGithubUserData(user)
-
 export const Graph = async () => {
+	const user: ClerkUserData | null = await currentUser();
+	const userData: GithubUserData = await getGithubUserData(user)
 
 	if(!user) return (
 		<p className="w-full text-center">Please 
@@ -69,7 +73,6 @@ export const Graph = async () => {
 				<h2 className="mb-4 text-white"><strong>{userName}</strong>: Commits Last 90 Days </h2>
 				<BarChart data={commits} />
 			</div>
-
 		</div>
 	)
 }
