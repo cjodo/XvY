@@ -2,14 +2,44 @@ import { BarChart } from "./BarChart";
 import { currentUser } from "@clerk/nextjs/server";
 import { SignInButton } from "@clerk/nextjs";
 
+import { GitRepoData } from "~/types";
+
 import { ClerkUserData, GithubUserData, CommitData} from "~/types";
 
 import { hasGithubConnected } from "~/utils/hasGithubConnected";
-import { getGithubUserData, getRepos } from "~/utils/getGithubUserData";
-import { buildCommitData } from "~/utils/buildChartData";
+import { getGithubUserData } from "~/utils/getGithubUserData";
+
+const getRepos = async (userName:string) => {
+	const res = await fetch(`https://api.github.com/users/${userName}/repos`, {next: { revalidate: 3600 }})
+	const commits = await res.json()
+
+	return commits
+}
+
+const getCommitsPerRepo = async (repoName: string, userName: string) => {
+	const res = await fetch(`https://api.github.com/repos/${userName}/${repoName}/commits?author=${userName}`, { next: { revalidate: 3600 } })
+	const commits = await res.json()
+
+	return commits
+}
+
+export const buildCommitData = (data: GitRepoData[]) => {
+  let commits:CommitData[] = []; 
+
+  data.forEach(async (repo: GitRepoData) => {
+    const repoData = await getCommitsPerRepo(repo.name, repo.owner.login)
+    const amountOfCommits: number = repoData.length
+
+    commits.push({name: repo.name, amount: amountOfCommits})
+  })
+  return commits
+};
+
+const user: ClerkUserData | null = await currentUser();
+
+const userData: GithubUserData = await getGithubUserData(user)
 
 export const Graph = async () => {
-	const user: ClerkUserData | null = await currentUser();
 
 	if(!user) return (
 		<p className="w-full text-center">Please 
@@ -20,8 +50,7 @@ export const Graph = async () => {
 	)
 	if(!hasGithubConnected(user)) return <p className="w-full text-center">Please Connect Your Github Account</p>
 
-	const UserData: GithubUserData = await getGithubUserData(user)
-	const userName = await UserData.items[0].login
+	const userName = userData.items[0].login
 
 	const repos = await getRepos(userName)
 
