@@ -82,10 +82,11 @@ export const BarChart = ({ data }: LineChartProps) => {
 			<svg ref={containerRef} width={width} height={height}>
 
 				<Group>
-					{data.map((d: CommitData) => (
+					{data.map((d: CommitData) => 
+						d.amount && (
 						<Bar
 							key={d.name}
-							x={(xScale(d.name) - margin.left ) - xScale.bandwidth() / 2} // Puts the bar in the middle of the tick
+							x={(xScale(d.name) + margin.left )} // Puts the bar in the middle of the tick
 							y={yScale(d.amount)}
 							height={height - margin.bottom - yScale(d.amount)}
 							width={xScale.bandwidth()}
@@ -101,7 +102,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 							onMouseMove={(event) => {
 								if(tooltipTimeout) clearTimeout(tooltipTimeout);
 								const eventSvgCoords = localPoint(event);
-								const left = xScale(d.name) - margin.left
+								const left = xScale(d.name) + margin.left
 								showTooltip({
 									tooltipData: d,
 									tooltipTop: eventSvgCoords?.y,
