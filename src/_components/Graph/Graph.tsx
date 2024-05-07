@@ -5,15 +5,14 @@ import { SignInButton } from "@clerk/nextjs";
 import { ClerkUserData, GithubUserData, CommitData} from "~/types";
 
 import { hasGithubConnected } from "~/utils/hasGithubConnected";
-import { getGithubUserData, getUserEvents, getRepos } from "~/utils/getGithubUserData";
+import { getGithubUserData, getRepos } from "~/utils/getGithubUserData";
 import { buildCommitData } from "~/utils/buildChartData";
 
 export const Graph = async () => {
-
 	const user: ClerkUserData | null = await currentUser();
 
 	if(!user) return (
-	<p className="w-full text-center">Please 
+		<p className="w-full text-center">Please 
 			<SignInButton>
 				<button className="bg-blue-500 hover:bg-blue-700 ml-2 text-white py-2 px-4 rounded">Sign In</button>
 			</SignInButton>
@@ -38,7 +37,7 @@ export const Graph = async () => {
 	return (
 		<div className="flex w-full my-auto justify-center">
 			<div className="flex flex-col text-center">
-			<h2 className="mb-4 text-white">{userName}: Github Commits per repo</h2>
+				<h2 className="mb-4 text-white"><strong>{userName}</strong>: Commits Last 90 Days </h2>
 				<BarChart data={commits} />
 			</div>
 
