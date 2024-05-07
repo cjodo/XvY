@@ -1,28 +1,43 @@
 'use client'
 
-import React, { useState } from 'react';
-
 import { useUser } from "@clerk/nextjs"
 import { Group } from '@visx/group';
 import { Bar } from '@visx/shape';
 import { scaleLinear, scaleBand } from '@visx/scale';
 import { AxisBottom, AxisLeft, TickLabelProps } from '@visx/axis'
-import { LineProps } from '@visx/shape/lib/shapes/Line';
+import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip'
+import { localPoint } from '@visx/event'
+
 
 import { CommitData } from '~/types';
-import { set } from 'zod';
 
 interface LineChartProps {
 	data: CommitData[],
 }
 
+type TooltipData = {
+	name: string,
+	amount: number
+}
+
+const tooltipStyles = {
+	...defaultStyles,
+	minWidth: 60,
+	backgroundColor: 'rgba(0,0,0,0.9)',
+	color: 'white',
+}
 
 export const BarChart = ({ data }: LineChartProps) => {
 
-	const [fill, setFill] = useState("#CC5500")
-
-	console.log(data)
 	const { isLoaded } = useUser()
+
+	const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } = useTooltip<TooltipData>()
+
+	const { containerRef, TooltipInPortal } = useTooltipInPortal({
+		scroll: true
+	})
+
+	let tooltipTimeout: number
 
 	const margin = {
 		top: 10,
@@ -54,55 +69,72 @@ export const BarChart = ({ data }: LineChartProps) => {
 			angle: 45
 			} as const)
 	
-	const YtickLabelProps: TickLabelProps<any> = () => 
-		({
-			fill: "#ffffff",
-			fontSize: 12,
-			fontFamily: "sans-serif",
-			} as const)
-
-
 	if(!isLoaded) return <p className="w-full text-center">...Loading</p>
 
 	return (
-		<svg width={width} height={height}>
+		<div style={{ position: 'relative' }}>
+			<svg ref={containerRef} width={width} height={height}>
 
-			<Group>
-				{data.map(d => (
-					<Bar
-						key={d.name}
-						x={(xScale(d.name) - margin.left ) - xScale.bandwidth() / 2} // Puts the bar in the middle of the tick
-						y={yScale(d.amount)}
-						height={height - margin.bottom - yScale(d.amount)}
-						width={xScale.bandwidth()}
-						fill="#cc5500"
-						className='bar'
-					/>
-				))}
-			</Group>
+				<Group>
+					{data.map(d => (
+						<Bar
+							key={d.name}
+							x={(xScale(d.name) - margin.left ) - xScale.bandwidth() / 2} // Puts the bar in the middle of the tick
+							y={yScale(d.amount)}
+							height={height - margin.bottom - yScale(d.amount)}
+							width={xScale.bandwidth()}
+							fill="#cc5500"
+							className='bar'
+							onMouseLeave={() => {
+								tooltipTimeout = window.setTimeout(() => {
+									hideTooltip()
+								}, 300)
+							}}
+							onMouseMove={(event) => {
+								if(tooltipTimeout) clearTimeout(tooltipTimeout);
+								const eventSvgCoords = localPoint(event);
+								const left = xScale(d.name) - margin.left
+								showTooltip({
+									tooltipData: d,
+									tooltipTop: eventSvgCoords?.y,
+									tooltipLeft: left
+								})
+							}}
+						/>
+					))}
+				</Group>
 
 
-			{/* X-axis */}
-			<AxisBottom
-				scale={xScale}
-				top={height - margin.bottom}
-				left={margin.left}
-				stroke='#ffffff'
-				tickLabelProps={XtickLabelProps}
-				tickStroke='#ffffff'
-			/>
+				{/* X-axis */}
+				<AxisBottom
+					scale={xScale}
+					top={height - margin.bottom}
+					left={margin.left}
+					stroke='#ffffff'
+					tickLabelProps={XtickLabelProps}
+					tickStroke='#ffffff'
+				/>
 
-			{/* Y-axis */}
-			<AxisLeft
-				scale={yScale}
-				top={margin.top}
-				stroke='#ffffff'
-				left={margin.left}
-				label="Number of Commits"
-				tickLabelProps={{fill:"#ffffff"}}
-				tickStroke='#ffffff'
-			/>
-		</svg>
+				{/* Y-axis */}
+				<AxisLeft
+					scale={yScale}
+					top={margin.top}
+					stroke='#ffffff'
+					left={margin.left}
+					label="Number of Commits"
+					tickLabelProps={{fill:"#ffffff"}}
+					tickStroke='#ffffff'
+				/>
+			</svg>
+			{tooltipOpen && tooltipData && (
+				<TooltipInPortal top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
+					<div>
+						<strong>Repo: {tooltipData.name}</strong>
+					</div>
+					<div>Commits: {tooltipData.amount}</div>
+				</TooltipInPortal>
+			)}
+		</div>
 	)
 }
 
