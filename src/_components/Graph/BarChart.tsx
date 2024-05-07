@@ -9,7 +9,6 @@ import { AxisBottom, AxisLeft, TickLabelProps } from '@visx/axis'
 import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip'
 import { localPoint } from '@visx/event'
 
-
 import { CommitData } from '~/types';
 
 interface LineChartProps {
@@ -85,7 +84,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 					{data.map((d: CommitData) => (
 						<Bar
 							key={d.name}
-							x={(xScale(d.name) - margin.left ) - xScale.bandwidth() / 2} // Puts the bar in the middle of the tick
+							x={(xScale(d.name) + margin.left )} // Puts the bar in the middle of the tick
 							y={yScale(d.amount)}
 							height={height - margin.bottom - yScale(d.amount)}
 							width={xScale.bandwidth()}
