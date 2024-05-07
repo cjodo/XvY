@@ -6,7 +6,6 @@ export const buildCommitData = (data: GitRepoData[]) => {
 
   data.forEach(async (repo: GitRepoData) => {
     const repoData = await getCommitsPerRepo(repo.name, repo.owner.login)
-
     const amountOfCommits: number = repoData.length
 
     commits.push({name: repo.name, amount: amountOfCommits})

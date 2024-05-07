@@ -6,13 +6,13 @@ cd XvY
 npm install
 ```
 
-
-
 ## TODO
-- [  ] Tooltip on hover instead of axis labels (maybe)
+- [ X ] Tooltip on hover ( instead of axis labels?)(maybe)
+- [  ] Why is the last bar not rendering?
+- [  ] Custom Signup page
 - [  ] Styles
 - [  ] Other types of charts 
-- [  ] GH Authentication key
+- [  ] set up OAuth
 - [  ] Migrate to Github Sdk
 
 

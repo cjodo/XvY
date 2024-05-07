@@ -1,12 +1,12 @@
 import { User } from '@clerk/nextjs/server'
 
-interface GithubUserData {
+export interface GithubUserData {
   items: {
     [ login:string, ]
   }
 }
 
-interface GitEvent {
+export interface GitEvent {
 	id: string,
 	type: "PushEvent" | "IssuesEvent" | "WatchEvent",
 	actor: string,
@@ -15,7 +15,7 @@ interface GitEvent {
   },
 }
 
-interface GitRepoData {
+export interface GitRepoData {
   id: string,
   name: string,
   full_name: string,
@@ -24,15 +24,11 @@ interface GitRepoData {
   }
 }
 
-interface CommitData {
+export interface CommitData {
   name:string,
   amount: number
 }
 
 export {
-  User as ClerkUserData,
-  GithubUserData,
-  GitEvent,
-  GitRepoData,
-  CommitData
+  User as ClerkUserData
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs"
 import { Group } from '@visx/group';
 import { Bar } from '@visx/shape';
@@ -30,12 +31,14 @@ const tooltipStyles = {
 export const BarChart = ({ data }: LineChartProps) => {
 
 	const { isLoaded } = useUser()
+	const router = useRouter();
 
 	const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } = useTooltip<TooltipData>()
 
 	const { containerRef, TooltipInPortal } = useTooltipInPortal({
 		scroll: true
 	})
+
 
 	let tooltipTimeout: number
 
@@ -69,14 +72,17 @@ export const BarChart = ({ data }: LineChartProps) => {
 			angle: 45
 			} as const)
 	
-	if(!isLoaded) return <p className="w-full text-center">...Loading</p>
+	if(!isLoaded){
+		router.refresh()
+		return <p className="w-full text-center">...Loading</p>
+	} 
 
 	return (
 		<div style={{ position: 'relative' }}>
 			<svg ref={containerRef} width={width} height={height}>
 
 				<Group>
-					{data.map(d => (
+					{data.map((d: CommitData) => (
 						<Bar
 							key={d.name}
 							x={(xScale(d.name) - margin.left ) - xScale.bandwidth() / 2} // Puts the bar in the middle of the tick
@@ -85,11 +91,13 @@ export const BarChart = ({ data }: LineChartProps) => {
 							width={xScale.bandwidth()}
 							fill="#cc5500"
 							className='bar'
+
 							onMouseLeave={() => {
 								tooltipTimeout = window.setTimeout(() => {
 									hideTooltip()
 								}, 300)
 							}}
+
 							onMouseMove={(event) => {
 								if(tooltipTimeout) clearTimeout(tooltipTimeout);
 								const eventSvgCoords = localPoint(event);
@@ -100,6 +108,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 									tooltipLeft: left
 								})
 							}}
+
 						/>
 					))}
 				</Group>

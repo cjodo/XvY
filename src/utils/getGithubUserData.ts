@@ -1,6 +1,4 @@
 import { ClerkUserData } from '~/types'
-import { env } from '~/env'
-
 
 export const getGithubUserData = async (user: ClerkUserData | null) => {
 	const userName = user?.username
