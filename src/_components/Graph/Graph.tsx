@@ -8,10 +8,9 @@ import { hasGithubConnected } from "~/utils/hasGithubConnected";
 import { getGithubUserData, getUserEvents, getRepos } from "~/utils/getGithubUserData";
 import { buildCommitData } from "~/utils/buildChartData";
 
-// eventually we'll be passing in the data to be rendered from github, not sure how to go about that yet
 export const Graph = async () => {
 
-	const user: ClerkUserData | null= await currentUser();
+	const user: ClerkUserData | null = await currentUser();
 
 	if(!user) return (
 	<p className="w-full text-center">Please 
@@ -29,8 +28,7 @@ export const Graph = async () => {
 
 	let commits:CommitData[] = [];
 
-	// add the gh auth key to db and use that ( optional )
-	if(!repos.message) {
+	if(!repos.message) { // makes sure rate limit is not hit
 		commits = buildCommitData(repos)
 	} else {
 		console.log(repos)
