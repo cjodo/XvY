@@ -8,7 +8,7 @@ npm install
 
 ## TODO
 - [ X ] Tooltip on hover ( instead of axis labels?)(maybe)
-- [  ] Why is the last bar not rendering?
+- [  ] weird caching behavior on prod
 - [  ] Custom Signup page
 - [  ] Styles
 - [  ] Other types of charts 
