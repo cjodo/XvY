@@ -30,15 +30,18 @@ const getCommitsPerRepo = async (repoName: string, userName: string) => {
 }
 
 export const buildCommitData = (data: GitRepoData[]) => {
-  let commits:CommitData[] = []; 
+	let commits:CommitData[] = []; 
 
-  data.forEach(async (repo: GitRepoData) => {
-    const repoData = await getCommitsPerRepo(repo.name, repo.owner.login)
-    const amountOfCommits: number = repoData.length
+	data.forEach(async (repo: GitRepoData) => {
+		const repoData = await getCommitsPerRepo(repo.name, repo.owner.login)
+		const amountOfCommits: number = repoData.length
 
-    commits.push({name: repo.name, amount: amountOfCommits})
-  })
-  return commits
+	commits.push({
+		name: repo.name, 
+		amount: amountOfCommits, 
+		repoURL: repo.html_url})
+	})
+	return commits
 };
 
 export const Graph = async () => {
@@ -62,7 +65,7 @@ export const Graph = async () => {
 
 	if(!repos.message) { // makes sure rate limit is not hit
 		commits = buildCommitData(repos)
-	} else {
+} else {
 		console.log(repos)
 		console.log("Rate limit hit")
 	}
