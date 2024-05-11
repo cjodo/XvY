@@ -9,6 +9,7 @@ export function Header() {
 
         <div className="flex align-center gap-5">
           <Link className="py-2" href={"/"}>Home</Link>
+          <Link className="py-2" href={"/examples"}>Examples</Link>
         </div>
         
         <SignedIn>
