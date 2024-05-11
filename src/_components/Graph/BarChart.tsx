@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs"
 import { Group } from '@visx/group';
 import { Bar } from '@visx/shape';
@@ -30,14 +29,12 @@ const tooltipStyles = {
 export const BarChart = ({ data }: LineChartProps) => {
 
 	const { isLoaded } = useUser()
-	const router = useRouter();
 
 	const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } = useTooltip<TooltipData>()
 
 	const { containerRef, TooltipInPortal } = useTooltipInPortal({
 		scroll: true
 	})
-
 
 	let tooltipTimeout: number
 
@@ -70,9 +67,8 @@ export const BarChart = ({ data }: LineChartProps) => {
 			textAnchor: "start",
 			angle: 45
 			} as const)
-	
+
 	if(!isLoaded){
-		router.refresh()
 		return <p className="w-full text-center">...Loading</p>
 	} 
 
@@ -96,6 +92,11 @@ export const BarChart = ({ data }: LineChartProps) => {
 									hideTooltip()
 								}, 300)
 							}}
+
+							onClick={() => {
+								const repoUrl = d.repoURL
+								window.open(repoUrl)
+							}}	
 
 							onMouseMove={(event) => {
 								if(tooltipTimeout) clearTimeout(tooltipTimeout);

@@ -21,12 +21,14 @@ export interface GitRepoData {
   full_name: string,
   owner : {
     login: string
-  }
+  },
+  html_url: string
 }
 
 export interface CommitData {
   name:string,
-  amount: number
+  amount: number,
+  repoURL: string,
 }
 
 export {
