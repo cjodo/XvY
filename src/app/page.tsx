@@ -1,4 +1,4 @@
-import { Graph } from "~/_components/Graph/Graph";
+import { Graph } from "./_components/Graph/Graph";
 
 export const revalidate = 3600;
 

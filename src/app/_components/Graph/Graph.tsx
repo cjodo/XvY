@@ -43,7 +43,7 @@ export const buildCommitData = (data: GitRepoData[]) => {
 };
 
 interface GraphProps {
-	passedUsername: string | null
+	passedUsername?: string;
 }
 
 export const Graph = async ({passedUsername}: GraphProps) => {

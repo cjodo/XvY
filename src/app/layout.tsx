@@ -1,11 +1,10 @@
 import "~/styles/globals.css";
-import Link from "next/link";
 import { Inter } from "next/font/google";
 
-import { Header } from "~/_components/Header/Header";
+import { Header } from "./_components/Header/Header";
+import { Footer } from "./_components/Footer/Footer";
 
 import { ClerkProvider } from "@clerk/nextjs";
-import { Footer } from "~/_components/Footer/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
