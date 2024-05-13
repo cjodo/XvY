@@ -45,7 +45,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 		left:20,
 	}
 
-	const width = 800
+	const width = Math.min(800, window.innerWidth - 40)
 	const height = 600
 
 	const xScale = scaleBand({
