@@ -1,14 +1,8 @@
 'use client'
 
-import { db } from "~/server/db"
-import { ClerkUserData } from "~/types"
-import { useCallback, useState } from "react"
+import { useState } from "react"
 
 import { Modal } from "./Modal"
-
-interface ModalParams {
-		user: ClerkUserData
-}
 
 export const ToggleButton = () => {
 	const [toggle, setToggle] = useState(false);
@@ -27,7 +21,6 @@ export const ToggleButton = () => {
 			<div>{
 				toggle && 
 					<Modal 
-					toggle={toggle}
 					setToggle={setToggle}
 			/>}</div>
 		</>

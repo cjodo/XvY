@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql, relations } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   index,
   pgTableCreator,
@@ -9,6 +9,7 @@ import {
   uuid,
   timestamp,
   varchar,
+  primaryKey
 } from "drizzle-orm/pg-core";
 
 
@@ -41,9 +42,10 @@ export const userRelations = relations(users, ({many}) => ({
 export const gh_auth_keys = createTable(
   "gh_auth_keys",
   {
-    id: serial("id").primaryKey(),
+    id: serial('id').primaryKey().notNull(),
     key: varchar("key"),
-    owner: varchar("owner") // username
+    owner: varchar("owner"), // username
+    expires: timestamp("expires")
   }
 )
 
