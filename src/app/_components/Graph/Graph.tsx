@@ -1,6 +1,6 @@
 import { BarChart } from "./BarChart";
 import { currentUser } from "@clerk/nextjs/server";
-import { SignInButton, useAuth } from "@clerk/nextjs";
+import { SignInButton} from "@clerk/nextjs";
 
 import { ClerkUserData, CommitData, GitRepoData} from "~/types";
 
@@ -8,6 +8,10 @@ import { hasGithubConnected } from "../../_utils/hasGithubConnected";
 import { getRepos } from "~/app/_utils/getGithubUserData";
 import { buildCommitData } from "~/app/_utils/buildChartData";
 
+import { db } from "~/server/db";
+import { gh_auth_keys } from "~/server/db/schema";
+
+import { eq } from "drizzle-orm";
 
 interface GraphProps {
 	withAuth: boolean;
@@ -42,11 +46,15 @@ export const Graph = async ({passedUsername, withAuth}: GraphProps) => {
 
 	const GithubUserName = user?.username
 
-	const repos = await getRepos(GithubUserName, withAuth)
+	const token = await db.query.gh_auth_keys.findFirst({
+		where: eq(gh_auth_keys.owner, GithubUserName)
+	})
+
+	const repos = await getRepos(GithubUserName, withAuth, token?.key)
 
 	let commits:CommitData[] = [];
 	if(!repos.message) { // makes sure rate limit is not hit
-		commits = buildCommitData(repos, withAuth)
+		commits = buildCommitData(repos, withAuth, token?.key)
 	} else {
 		console.log("Rate limit hit")
 	}

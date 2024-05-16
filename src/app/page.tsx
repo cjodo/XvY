@@ -6,7 +6,7 @@ export default async function HomePage() {
 
   return (
     <main className="p-5 min-h-[calc(100vh-76px-100px)] justify-center align-center"> 
-      <Graph />
+      <Graph withAuth={true}/>
     </main>
   );
 }
