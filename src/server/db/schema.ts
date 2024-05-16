@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
+import { sql, relations } from "drizzle-orm";
 import {
   index,
   pgTableCreator,
@@ -9,8 +9,9 @@ import {
   uuid,
   timestamp,
   varchar,
-  json
 } from "drizzle-orm/pg-core";
+
+
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -33,19 +34,23 @@ export const users = createTable(
   }
 )
 
-export const posts = createTable(
-  "graph",
+export const userRelations = relations(users, ({many}) => ({
+  gh_auth_keys: many(gh_auth_keys)
+}))
+
+export const gh_auth_keys = createTable(
+  "gh_auth_keys",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    data: json("data")
-      .notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt"),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+    key: varchar("key"),
+    owner: varchar("owner") // username
+  }
+)
+
+export const ghAuthRelations = relations(gh_auth_keys, ({ one }) => ({
+  owner: one( users, {
+    fields: [gh_auth_keys.owner],
+    references: [users.username]
   })
-);
+}))
+
