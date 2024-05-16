@@ -7,37 +7,44 @@ export const getUserEvents = async (userName: string) => {
 export const getRepos = async (userName:string, withAuth:boolean, token: string) => {
 	let headers = null
 	if (withAuth) {
-		headers = {"Authentication": "Bearer ", token}
+		headers = {"Authorization": `Bearer ${token}`}
 	}
-	const res = await fetch(`https://api.github.com/users/${userName}/repos`, {next: { revalidate: 3600 }, headers: {...headers}})
+
+	const res = await fetch(`https://api.github.com/users/${userName}/repos?per_page=100&visibility=all`, {next: { revalidate: 3600 }, headers: {
+		"Authorization": `Bearer ${token}`
+	}})
+
 	const commits = await res.json()
+	console.log(commits)
+
 
 	return commits
 }
+
 export const getCommitsPerRepo = async (
 	repoName: string, 
 	userName: string, 
-	useAuth: boolean, 
+	withAuth: boolean, 
 	token: string) => {
-	let headers = null
-	if (useAuth) {
-		headers = {"Authentication":  "Bearer ", token}
-	}
-	const res = await fetch(`https://api.github.com/repos/${userName}/${repoName}/commits?author=${userName}&per_page=100`, 
-		{ next: { revalidate: 3600 },
-			headers: {
-				...headers
-			}
-	})
+		const res = await fetch(`https://api.github.com/repos/${userName}/${repoName}/commits?author=${userName}&per_page=100&visibility=all`, 
+			{ next: { revalidate: 60 },
+				headers: {
+				'Accept' : 'application/vnd.github.v3+json',
+				"Authorization": `Bearer ${token}`,
+				}
+		})
 	const commits = await res.json()
+	console.log(commits)
 
 	return commits
 }
+
+
 export const getGithubUserData = async (userName: string, withAuth:boolean, token: string) => {
 	let headers = null
 
 	if (withAuth) {
-		headers = {"Authentication":  "Bearer ", token}
+		headers = {"Authorization":  `Bearer ${token}` }
 	}
 	const res = await fetch(`https://api.github.com/search/users?q=${userName}`, 
 		{ 
