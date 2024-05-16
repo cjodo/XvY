@@ -9,6 +9,7 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip'
 import { localPoint } from '@visx/event'
 
 import { CommitData } from '~/types';
+import { useEffect, useState } from "react";
 
 interface LineChartProps {
 	data: CommitData[],
@@ -28,6 +29,12 @@ const tooltipStyles = {
 
 export const BarChart = ({ data }: LineChartProps) => {
 
+	const [innerWidth, setInnerwidth] = useState(0);
+
+	useEffect(() => { // window is not defined until component mounts
+		setInnerwidth(window.innerWidth)
+	})
+
 	const { isLoaded } = useUser()
 
 	const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } = useTooltip<TooltipData>()
@@ -45,7 +52,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 		left:20,
 	}
 
-	const width = Math.min(800, window.innerWidth - 40)
+	const width = Math.min(800, innerWidth - 40)
 	const height = 600
 
 	const xScale = scaleBand({
@@ -71,6 +78,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 	if(!isLoaded){
 		return <p className="w-full text-center">...Loading</p>
 	} 
+
 
 	return (
 		<div style={{ position: 'relative' }}>

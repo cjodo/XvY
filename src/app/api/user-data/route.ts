@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server";
 
-export default async function GET (res: NextApiResponse ) {
+export default async function GET (res: NextResponse ) {
 	const user = await currentUser();
 
 	if(!user) {

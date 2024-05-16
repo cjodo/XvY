@@ -16,6 +16,7 @@ export interface GitEvent {
 }
 
 export interface GitRepoData {
+  message?:string,
   id: string,
   name: string,
   full_name: string,

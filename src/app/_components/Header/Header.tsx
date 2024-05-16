@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { SignInButton, UserButton, SignedIn, SignedOut} from '@clerk/nextjs'
 
+import { ToggleButton } from "../AddAuthModal/ToggleButton";
+
 
 export function Header() {
   return (
@@ -10,6 +12,10 @@ export function Header() {
         <div className="flex align-center gap-5">
           <Link className="py-2" href={"/"}>Home</Link>
           <Link className="py-2" href={"/examples"}>Examples</Link>
+
+          <SignedIn> 
+            <ToggleButton />
+          </SignedIn>
         </div>
         
         <SignedIn>
@@ -18,7 +24,9 @@ export function Header() {
 
         <SignedOut>
           <SignInButton>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Sign In</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
+              Sign In
+            </button>
           </SignInButton>
         </SignedOut>
       </nav>
