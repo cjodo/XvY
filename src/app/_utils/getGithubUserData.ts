@@ -10,15 +10,17 @@ export const getRepos = async (userName:string, withAuth:boolean, token: string)
 		headers = {"Authorization": `Bearer ${token}`}
 	}
 
-	const res = await fetch(`https://api.github.com/users/${userName}/repos?per_page=100&visibility=all`, {next: { revalidate: 3600 }, headers: {
-		"Authorization": `Bearer ${token}`
+	console.log(token)
+
+	const res = await fetch(`https://api.github.com/users/${userName}/repos?per_page=100&visibility=all`, {next: { revalidate: 60,}, 
+		headers: {
+			"Authorization": `Bearer ${token}`
 	}})
 
-	const commits = await res.json()
-	console.log(commits)
+	const repos = await res.json()
 
 
-	return commits
+	return repos
 }
 
 export const getCommitsPerRepo = async (
@@ -34,7 +36,6 @@ export const getCommitsPerRepo = async (
 				}
 		})
 	const commits = await res.json()
-	console.log(commits)
 
 	return commits
 }
