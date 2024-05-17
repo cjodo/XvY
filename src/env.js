@@ -11,8 +11,6 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    PEM: z.string(),
-    GH_CLIENT_ID: z.string()
   },
 
 
@@ -32,8 +30,6 @@ export const env = createEnv({
   runtimeEnv: {
     POSTGRES_URL: process.env.POSTGRES_URL,
     NODE_ENV: process.env.NODE_ENV,
-    PEM: process.env.PEM,
-    GH_CLIENT_ID: process.env.GH_CLIENT_ID
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
