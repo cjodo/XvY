@@ -52,10 +52,12 @@ export const Graph = async ({passedUsername, withAuth}: GraphProps) => {
 	})
 
 	const res = await getRepos(GithubUserName, withAuth, token?.key);
-	const repos = await res.items
-	console.log(repos)
+	const repos = await res.data.items
+
+	console.log("From Graph: ", res)
 
 	let commits:CommitData[] = [];
+
 	if(!repos.message) { // makes sure rate limit is not hit
 		commits = buildCommitData(repos, withAuth, token?.key)
 	} else {
