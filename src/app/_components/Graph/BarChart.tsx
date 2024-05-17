@@ -124,6 +124,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 
 				{/* X-axis */}
 				<AxisBottom
+					numTicks={xScale.bandwidth()}
 					scale={xScale}
 					top={height - margin.bottom}
 					left={margin.left}
