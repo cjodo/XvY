@@ -19,7 +19,7 @@ export const getRepos = async (userName:string | null, withAuth:boolean, token?:
 
 		return repos
 	} else {
-		const res = await fetch(`https://api.github.com/users/${userName}/repos?per_page=100&visibility=all`, {next: { revalidate: 60},
+		const res = await fetch(`https://api.github.com/search/repositories?q=user:${userName}&per_page=100`, {next: { revalidate: 60},
 			headers: {
 				'Accept' : 'application/vnd.github.v3+json',
 			}
@@ -49,8 +49,9 @@ export const getCommitsPerRepo = async (
 
 		const commits = await res.json()
 		return commits
+
 	} else {
-		const res = await fetch(`https://api.github.com/repos/${userName}/${repoName}/commits?author=${userName}&per_page=100&visibility=all`, 
+		const res = await fetch(`https://api.github.com/repos/${userName}/${repoName}/commits?author=${userName}&per_page=100`, 
 			{ next: { revalidate: 60 },
 				headers: {
 					'Accept' : 'application/vnd.github.v3+json',
@@ -63,7 +64,10 @@ export const getCommitsPerRepo = async (
 }
 
 
-export const getGithubUserData = async (userName: string, withAuth:boolean, token?: string) => {
+export const getGithubUserData = async (
+	userName: string, 
+	withAuth:boolean, 
+	token?: string) => {
 	let headers = null
 
 	if (withAuth) {

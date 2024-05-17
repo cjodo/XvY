@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/nextjs"
 import React, { FormEvent, useState } from "react"
-import "./modal.css"
+import styles from "./modal.module.css"
 import { postGhKey } from "~/app/_utils/postGhKey"
 
 interface ModalParams {
@@ -64,9 +64,9 @@ export const Modal = ({ setToggle }:ModalParams) => {
 
 	return (
 		<>
-			<div onClick={close} className="overlay"></div>
+			<div onClick={close} className={styles.overlay}></div>
 
-			<div className="modal">
+			<div className={styles.modal}>
 				<div className="text-gray-800 modalContent">
 					<button onClick={close} 
 						className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded absolute right-10" >

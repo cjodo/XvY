@@ -9,5 +9,5 @@ npm install
 ## TODO
 - [  ] Custom Signup page
 - [  ] Styles
-
+- [  ] Add Home Page
 
