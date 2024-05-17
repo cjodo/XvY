@@ -30,12 +30,11 @@ const tooltipStyles = {
 export const BarChart = ({ data }: LineChartProps) => {
 
 	const [innerWidth, setInnerwidth] = useState(0);
+	const { isLoaded } = useUser()
 
 	useEffect(() => { // window is not defined until component mounts
 		setInnerwidth(window.innerWidth)
 	})
-
-	const { isLoaded } = useUser()
 
 	const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } = useTooltip<TooltipData>()
 
