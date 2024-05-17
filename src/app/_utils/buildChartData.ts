@@ -1,7 +1,7 @@
 import { GitRepoData, CommitData } from "~/types";
 import { getCommitsPerRepo } from "./getGithubUserData";
 
-export const buildCommitData = (data: GitRepoData[], withAuth: boolean, token:string) => {
+export const buildCommitData = (data: GitRepoData[], withAuth: boolean, token?:string | null) => {
 	let commits:CommitData[] = []; 
 	
 	data.forEach(async (repo: GitRepoData) => {

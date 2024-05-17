@@ -1,6 +1,7 @@
-import React, { FormEvent, useState } from "react"
 import { useUser } from "@clerk/nextjs"
+import React, { FormEvent, useState } from "react"
 import "./modal.css"
+import { postGhKey } from "~/app/_utils/postGhKey"
 
 interface ModalParams {
 	setToggle: (toggle: boolean) => void
@@ -55,19 +56,7 @@ export const Modal = ({ setToggle }:ModalParams) => {
 		const username = user.username
 
 		if(exp) {
-			const res = await fetch(`/api/add-auth-key`, {
-				method: "POST",
-				body: JSON.stringify({
-					key:key, 
-					username: username,
-					exp: exp
-				})
-			})
-			const json = await res.json()
-			console.log(json)
-			if(json.message === 'Success'){
-				close()
-			}
+			postGhKey(key, username, exp)
 		} else {
 			setInvalidMessage("Must have an expiration date or check No Expiration")
 		}

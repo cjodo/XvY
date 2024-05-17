@@ -21,7 +21,9 @@ interface GraphProps {
 export const Graph = async ({passedUsername, withAuth}: GraphProps) => {
 
 	if(passedUsername) {
-		const repos = await getRepos(passedUsername, withAuth);
+		const res = await getRepos(passedUsername, withAuth);
+		const repos = await res.items
+		console.log(repos)
 		const commits = buildCommitData(repos, withAuth);
 		return (
 			<div className="flex w-full my-auto justify-center">
@@ -47,16 +49,19 @@ export const Graph = async ({passedUsername, withAuth}: GraphProps) => {
 	const GithubUserName = user?.username
 
 	const token = await db.query.gh_auth_keys.findFirst({
-		where: eq(gh_auth_keys.owner, GithubUserName)
+		where: eq(gh_auth_keys.owner, GithubUserName),
 	})
 
-	const repos = await getRepos(GithubUserName, withAuth, token?.key)
+	const res = await getRepos(GithubUserName, withAuth, token?.key);
+	const repos = await res.items
+	console.log(repos)
 
 	let commits:CommitData[] = [];
 	if(!repos.message) { // makes sure rate limit is not hit
 		commits = buildCommitData(repos, withAuth, token?.key)
 	} else {
 		console.log("Rate limit hit")
+		console.log(repos)
 	}
 
 	return (
