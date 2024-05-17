@@ -14,9 +14,13 @@ export const GET = async (req:NextRequest) => {
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
 
-	const { key, username } = await req.json()
+	const { key, username, exp } = await req.json()
+	
+	console.log("From route req: ", {key, username, exp})
 
-	const insert = await db.insert(gh_auth_keys).values({key: key, owner:username})
+	const insert = await db.insert(gh_auth_keys).values({key: key, owner: username, expires: exp, valid: null})
+
+	console.log(insert)
 
 	if(insert.rowCount > 0) {
 		return NextResponse.json({

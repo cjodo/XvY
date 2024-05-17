@@ -3,13 +3,12 @@
 
 import { relations } from "drizzle-orm";
 import {
-  index,
   pgTableCreator,
   serial,
   uuid,
   timestamp,
   varchar,
-  primaryKey
+  boolean
 } from "drizzle-orm/pg-core";
 
 
@@ -35,8 +34,8 @@ export const users = createTable(
   }
 )
 
-export const userRelations = relations(users, ({many}) => ({
-  gh_auth_keys: many(gh_auth_keys)
+export const userRelations = relations(users, ({one}) => ({
+  gh_auth_keys: one(gh_auth_keys)
 }))
 
 export const gh_auth_keys = createTable(
@@ -45,7 +44,8 @@ export const gh_auth_keys = createTable(
     id: serial('id').primaryKey().notNull(),
     key: varchar("key"),
     owner: varchar("owner"), // username
-    expires: timestamp("expires")
+    expires: timestamp("expires", {mode: "string"}).notNull(),
+    valid: boolean("valid")
   }
 )
 

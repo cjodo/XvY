@@ -15,7 +15,7 @@ export const ToggleButton = () => {
 		<>
 
 		<button onClick={handleClick} className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
-			Add Auth Key
+			Add API Key
 		</button>
 
 			<div>{
