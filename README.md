@@ -10,4 +10,6 @@ npm install
 - [  ] Custom Signup page
 - [  ] Styles
 - [  ] Add Home Page
+- [  ] Migrate to octokit
+- [  ] Tests
 

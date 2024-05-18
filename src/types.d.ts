@@ -1,5 +1,7 @@
 import { User } from '@clerk/nextjs/server'
 
+export type ghToken = string | null | undefined
+
 export interface GithubUserData {
   items: {
     [ login:string, ]

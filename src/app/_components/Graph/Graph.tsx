@@ -6,10 +6,8 @@ import { ClerkUserData, CommitData, GitRepoData} from "~/types";
 
 import { hasGithubConnected } from "../../_utils/hasGithubConnected";
 import { getRepos } from "~/app/_utils/getGithubUserData";
-import { buildCommitData } from "~/app/_utils/buildChartData";
 
-import { db } from "~/server/db";
-import { gh_auth_keys } from "~/server/db/schema";
+import { buildCommitData } from "~/app/_utils/buildChartData";
 
 import { eq } from "drizzle-orm";
 
@@ -23,7 +21,9 @@ export const Graph = async ({passedUsername, withAuth}: GraphProps) => {
 	if(passedUsername) {
 		const res = await getRepos(passedUsername, withAuth);
 		const repos = await res.items
+
 		const commits = buildCommitData(repos, withAuth);
+
 		return (
 			<div className="flex w-full my-auto justify-center">
 				<div className="flex flex-col text-center">
@@ -47,19 +47,14 @@ export const Graph = async ({passedUsername, withAuth}: GraphProps) => {
 
 	const GithubUserName = user?.username
 
-	const token = await db.query.gh_auth_keys.findFirst({
-		where: eq(gh_auth_keys.owner, GithubUserName),
-	})
 
-	const res = await getRepos(GithubUserName, withAuth, token?.key);
-	const repos = await res.data.items
-
-	console.log("From Graph: ", res)
+	const res = await getRepos(GithubUserName, withAuth);
+	const repos = res.data.items
 
 	let commits:CommitData[] = [];
 
 	if(!repos.message) { // makes sure rate limit is not hit
-		commits = buildCommitData(repos, withAuth, token?.key)
+		commits = await buildCommitData(repos, withAuth)
 	} else {
 		console.log("Rate limit hit")
 		console.log(repos)
