@@ -1,31 +1,22 @@
-import { Octokit, App } from "octokit"
+import { createAuthenticatedOctokit } from "./octokit/createAuthenticatedOctokit"
+import { createAuthenticatedApp } from "./octokit/createAuthenticatedApp"
 
-type ghToken = string | null | undefined
+import { getApiKey } from "./user/getApiKey"
 
-const createAuthenticatedOctokit = (token: ghToken) => {
-	const octokit = new Octokit({
-		auth: token
-	})
-
-	return octokit
-}
-
-const createAuthenticatedApp = (appId: string, privateKey: string) => {
-	const app = new App({ appId, privateKey })
-
-	return app
-}
-
-export const getUserEvents = async (userName: string) => {
+export const getUserEvents = async (userName: string) => {username
 	const res = await fetch(`https://api.github.com/users/${userName}/events`, { next: { revalidate: 3600 } })
 	const events = await res.json()
 
 	return events
 }
 
-export const getRepos = async (userName:string, withAuth:boolean, token?: ghToken) => {
+export const getRepos = async (userName:string, withAuth:boolean) => {
+
+
 	if (withAuth) {
-		const octokit =	createAuthenticatedOctokit(token)
+		const token = await getApiKey(userName)
+		const octokit =	createAuthenticatedOctokit(token?.key)
+
 		const repos = await octokit.rest.search.repos({
 			q: `user:${userName}`
 		})
@@ -49,15 +40,17 @@ export const getRepos = async (userName:string, withAuth:boolean, token?: ghToke
 export const getCommitsPerRepo = async (
 	repoName: string, 
 	userName: string, 
-	withAuth: boolean, 
-	token?: string | null) => {
+	withAuth: boolean) => {
 
 	if(withAuth){
+
+		const token = await getApiKey(userName.toLowerCase())
+
 		const res = await fetch(`https://api.github.com/repos/${userName}/${repoName}/commits?author=${userName}&per_page=100&visibility=all`, 
 			{ next: { revalidate: 60 },
 				headers: {
 					'Accept' : 'application/vnd.github.v3+json',
-					"Authorization": `Bearer ${token}`,
+					"Authorization": `Bearer ${token?.key}`,
 				}
 		})
 

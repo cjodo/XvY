@@ -28,7 +28,6 @@ const tooltipStyles = {
 }
 
 export const BarChart = ({ data }: LineChartProps) => {
-
 	const [innerWidth, setInnerwidth] = useState(0);
 	const { isLoaded } = useUser()
 
@@ -36,7 +35,13 @@ export const BarChart = ({ data }: LineChartProps) => {
 		setInnerwidth(window.innerWidth)
 	})
 
-	const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip } = useTooltip<TooltipData>()
+	const { 
+		tooltipOpen, 
+		tooltipLeft, 
+		tooltipTop, 
+		tooltipData, 
+		hideTooltip, 
+		showTooltip } = useTooltip<TooltipData>()
 
 	const { containerRef, TooltipInPortal } = useTooltipInPortal({
 		scroll: true
@@ -50,7 +55,6 @@ export const BarChart = ({ data }: LineChartProps) => {
 		bottom: 130,
 		left:20,
 	}
-
 	const width = Math.min(800, innerWidth - 40)
 	const height = 600
 
@@ -77,7 +81,6 @@ export const BarChart = ({ data }: LineChartProps) => {
 	if(!isLoaded){
 		return <p className="w-full text-center">...Loading</p>
 	} 
-
 
 	return (
 		<div style={{ position: 'relative' }}>
