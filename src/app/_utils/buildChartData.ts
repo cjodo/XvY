@@ -4,6 +4,7 @@ import { getCommitsPerRepo } from "../_services/getGithubUserData";
 export const buildCommitData = async (
 	data: GitRepoData[],
 	withAuth: boolean,
+	token: string | null,
 ) => {
 	let commits: CommitData[] = [];
 

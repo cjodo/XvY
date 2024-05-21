@@ -9,40 +9,18 @@ import { getRepos } from "~/app/_services/getGithubUserData";
 
 import { buildCommitData } from "~/app/_utils/buildChartData";
 import { Toast } from "./Toast/Toast";
+import { db } from "~/server/db";
+import { getApiKey } from "~/app/_utils/user/getApiKey";
 
 interface GraphProps {
 	withAuth: boolean;
 	passedUsername?: string;
 }
 
-export const Graph = async ({ passedUsername, withAuth }: GraphProps) => {
-	if (passedUsername) {
-		let repos;
-		try {
-			const res = await getRepos(passedUsername, withAuth);
-			repos = res.data.items;
-		} catch (err) {
-			console.error(err);
-			return <p>Failed</p>;
-		}
-
-		const commits = await buildCommitData(repos, withAuth);
-
-		console.log(commits);
-
-		return (
-			<div className="my-auto flex w-full justify-center">
-				<div className="flex flex-col text-center">
-					<h2 className="mb-4 text-white">
-						<strong>{passedUsername}</strong>: Commits Last 90 Days{" "}
-					</h2>
-					<BarChart data={commits} />
-				</div>
-			</div>
-		);
-	}
-
+export const Graph = async ({ withAuth }: GraphProps) => {
 	const user: ClerkUserData | null = await currentUser();
+
+	let toastMessage;
 
 	if (!user)
 		return (
@@ -55,22 +33,32 @@ export const Graph = async ({ passedUsername, withAuth }: GraphProps) => {
 				</SignInButton>
 			</p>
 		);
-	if (!hasGithubConnected(user))
+	if (!hasGithubConnected(user)) {
+		const toastMessage = `No github account found for ${user.username}`;
 		return (
-			<p className="w-full text-center">Please Connect Your Github Account</p>
+			<div>
+				<Toast type="warn" message={toastMessage} />
+				<p className="w-full text-center">Please Connect Your Github Account</p>
+			</div>
 		);
+	}
 
-	const GithubUserName = user?.username;
+	const username = user?.username;
 
-	const res = await getRepos(GithubUserName, withAuth);
+	const token = await getApiKey(username);
+	if (!token) {
+		toastMessage = `Couldn't find any api keys for User: ${username}`;
+	}
+
+	const res = await getRepos(username, withAuth, token?.key);
 	const repos = res.data.items;
 
 	let commits: CommitData[] = [];
 
-	if (!repos.message) {
+	try {
 		// makes sure rate limit is not hit
-		commits = await buildCommitData(repos, withAuth);
-	} else {
+		commits = await buildCommitData(repos, withAuth, token?.key);
+	} catch (err) {
 		console.log("Rate limit hit");
 		console.log(repos);
 	}
@@ -79,8 +67,8 @@ export const Graph = async ({ passedUsername, withAuth }: GraphProps) => {
 		<div className="my-auto flex w-full justify-center">
 			<div className="flex flex-col text-center">
 				<h2 className="mb-4 text-white">
-					<strong>{GithubUserName}</strong>: Commits Last 90 Days{" "}
-					<Toast type="info" message="HELLO" />
+					<strong>{username}</strong>: Commits Last 90 Days{" "}
+					<Toast type="info" message={toastMessage} />
 				</h2>
 				<BarChart data={commits} />
 			</div>
