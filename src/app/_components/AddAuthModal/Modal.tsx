@@ -86,10 +86,14 @@ export const Modal = ({ setOpen }: ModalParams) => {
 							Here
 						</a>
 					</p>
-					<p className="mb-4 text-xl">
+					<p className="mb-4 text-lg">
 						Click on <strong> Generate new token, </strong> Then choose{" "}
-						<strong>classic</strong>. The token must have repo scopes, it's up
-						to you for expiration
+						<strong>classic</strong>. The token must have repo scopes.
+					</p>
+
+					<p className="mb-2 text-lg">
+						Providing an api key will give access to private repos and higher
+						rate limits
 					</p>
 					<form onSubmit={handleSubmit}>
 						<div>
