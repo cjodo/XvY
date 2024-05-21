@@ -29,13 +29,13 @@ export type GitRepoResponse = GetResponseDataTypeFromEndpointMethod<
 export const getRepos = async (
 	userName: string,
 	withAuth: boolean,
+	token: string | null,
 ): Promise<OctokitResponse<GitRepoResponse>> => {
 	// Disgust
 	if (withAuth) {
-		const auth = await getApiKey(userName);
 		const octokit = new Octokit({
 			request: myFetch,
-			auth: auth?.key,
+			auth: token,
 		});
 
 		const repos = await octokit.rest.search.repos({
