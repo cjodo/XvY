@@ -2,14 +2,12 @@ import { BarChart } from "./BarChart";
 import { currentUser } from "@clerk/nextjs/server";
 import { SignInButton } from "@clerk/nextjs";
 
-import { ClerkUserData, CommitData, GitRepoData } from "~/types";
+import { ClerkUserData, CommitData } from "~/types";
 
 import { hasGithubConnected } from "../../_utils/hasGithubConnected";
 import { getRepos } from "~/app/_services/getGithubUserData";
 
 import { buildCommitData } from "~/app/_utils/buildChartData";
-import { Toast } from "./Toast/Toast";
-import { db } from "~/server/db";
 import { getApiKey } from "~/app/_utils/user/getApiKey";
 
 interface GraphProps {
@@ -19,8 +17,6 @@ interface GraphProps {
 
 export const Graph = async ({ withAuth }: GraphProps) => {
 	const user: ClerkUserData | null = await currentUser();
-
-	let toastMessage;
 
 	if (!user)
 		return (
@@ -34,10 +30,8 @@ export const Graph = async ({ withAuth }: GraphProps) => {
 			</p>
 		);
 	if (!hasGithubConnected(user)) {
-		const toastMessage = `No github account found for ${user.username}`;
 		return (
 			<div>
-				<Toast type="warn" message={toastMessage} />
 				<p className="w-full text-center">Please Connect Your Github Account</p>
 			</div>
 		);
@@ -46,9 +40,6 @@ export const Graph = async ({ withAuth }: GraphProps) => {
 	const username = user?.username;
 
 	const token = await getApiKey(username);
-	if (!token) {
-		toastMessage = `Couldn't find any api keys for User: ${username}`;
-	}
 
 	const res = await getRepos(username, withAuth, token?.key);
 	const repos = res.data.items;
@@ -68,7 +59,6 @@ export const Graph = async ({ withAuth }: GraphProps) => {
 			<div className="flex flex-col text-center">
 				<h2 className="mb-4 text-white">
 					<strong>{username}</strong>: Commits Last 90 Days{" "}
-					<Toast type="info" message={toastMessage} />
 				</h2>
 				<BarChart data={commits} />
 			</div>

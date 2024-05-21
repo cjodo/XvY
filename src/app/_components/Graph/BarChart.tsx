@@ -1,129 +1,124 @@
-'use client'
+"use client";
 
-import { useUser } from "@clerk/nextjs"
-import { useRouter } from "next/router";
-import { Group } from '@visx/group';
-import { Bar } from '@visx/shape';
-import { scaleLinear, scaleBand } from '@visx/scale';
-import { AxisBottom, AxisLeft, TickLabelProps } from '@visx/axis'
-import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip'
-import { localPoint } from '@visx/event'
+import { useUser } from "@clerk/nextjs";
+import { Group } from "@visx/group";
+import { Bar } from "@visx/shape";
+import { scaleLinear, scaleBand } from "@visx/scale";
+import { AxisBottom, AxisLeft, TickLabelProps } from "@visx/axis";
+import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
+import { localPoint } from "@visx/event";
 
-import { CommitData } from '~/types';
+import { CommitData } from "~/types";
 import { useEffect, useState } from "react";
 
 interface LineChartProps {
-	data: CommitData[],
+	data: CommitData[];
 }
 
 type TooltipData = {
-	name: string,
-	amount: number
-}
+	name: string;
+	amount: number;
+};
 
 const tooltipStyles = {
 	...defaultStyles,
 	minWidth: 60,
-	backgroundColor: 'rgba(0,0,0,0.9)',
-	color: 'white',
-}
+	backgroundColor: "rgba(0,0,0,0.9)",
+	color: "white",
+};
 
 export const BarChart = ({ data }: LineChartProps) => {
 	const [innerWidth, setInnerwidth] = useState(0);
-	const { isLoaded } = useUser()
+	const { isLoaded } = useUser();
 
-	useEffect(() => { // window is not defined until component mounts
-		setInnerwidth(window.innerWidth)
-	})
+	useEffect(() => {
+		// window is not defined until component mounts
+		setInnerwidth(window.innerWidth);
+	});
 
-	const { 
-		tooltipOpen, 
-		tooltipLeft, 
-		tooltipTop, 
-		tooltipData, 
-		hideTooltip, 
-		showTooltip } = useTooltip<TooltipData>()
+	const {
+		tooltipOpen,
+		tooltipLeft,
+		tooltipTop,
+		tooltipData,
+		hideTooltip,
+		showTooltip,
+	} = useTooltip<TooltipData>();
 
 	const { containerRef, TooltipInPortal } = useTooltipInPortal({
-		scroll: true
-	})
+		scroll: true,
+	});
 
-	let tooltipTimeout: number
+	let tooltipTimeout: number;
 
 	const margin = {
 		top: 10,
 		right: 20,
 		bottom: 130,
-		left:20,
-	}
-	const width = Math.min(800, innerWidth - 40)
-	const height = 600
+		left: 20,
+	};
+	const width = Math.min(800, innerWidth - 40);
+	const height = 600;
 
 	const xScale = scaleBand({
 		range: [margin.left, width - margin.right],
-		domain: data.map(d => d.name),
+		domain: data.map((d) => d.name),
 		padding: 0.2,
 	});
 
 	const yScale = scaleLinear({
 		range: [height - margin.bottom, margin.top],
-		domain: [0, Math.max(...data.map(d => d.amount))],
+		domain: [0, Math.max(...data.map((d) => d.amount))],
 	});
 
-	const XtickLabelProps: TickLabelProps<any> = () => 
+	const XtickLabelProps: TickLabelProps<any> = () =>
 		({
 			fill: "#ffffff",
 			fontSize: 12,
 			fontFamily: "sans-serif",
 			textAnchor: "start",
-			angle: 45
-			} as const)
+			angle: 45,
+		}) as const;
 
-	if(!isLoaded){
-		return <p className="w-full text-center">...Loading</p>
-	} 
+	if (!isLoaded) {
+		return <p className="w-full text-center">...Loading</p>;
+	}
 
 	return (
-		<div style={{ position: 'relative' }}>
+		<div style={{ position: "relative" }}>
 			<svg ref={containerRef} width={width} height={height}>
-
 				<Group>
 					{data.map((d: CommitData) => (
 						<Bar
 							key={d.name}
-							x={(xScale(d.name) + margin.left )} // Puts the bar in the middle of the tick
+							x={xScale(d.name) + margin.left} // Puts the bar in the middle of the tick
 							y={yScale(d.amount)}
 							height={height - margin.bottom - yScale(d.amount)}
 							width={xScale.bandwidth()}
 							fill="#cc5500"
-							className='bar'
-
+							className="bar"
 							onMouseLeave={() => {
 								tooltipTimeout = window.setTimeout(() => {
-									hideTooltip()
-								}, 300)
+									hideTooltip();
+								}, 300);
 							}}
-
 							onClick={() => {
-								const repoUrl = d.repoURL
-								window.open(repoUrl)
-							}}	
-
+								const repoUrl = d.repoURL;
+								window.open(repoUrl);
+							}}
 							onMouseMove={(event) => {
-								if(tooltipTimeout) clearTimeout(tooltipTimeout);
+								if (tooltipTimeout) clearTimeout(tooltipTimeout);
 								const eventSvgCoords = localPoint(event);
-								const left = xScale(d.name) - margin.left
+								const left = xScale(d.name) - margin.left;
 								showTooltip({
 									tooltipData: d,
 									tooltipTop: eventSvgCoords?.y,
-									tooltipLeft: left
-								})
+									tooltipLeft: left,
+								});
 							}}
-
 						/>
 					))}
 				</Group>
-
 
 				{/* X-axis */}
 				<AxisBottom
@@ -131,24 +126,28 @@ export const BarChart = ({ data }: LineChartProps) => {
 					scale={xScale}
 					top={height - margin.bottom}
 					left={margin.left}
-					stroke='#ffffff'
+					stroke="#ffffff"
 					tickLabelProps={XtickLabelProps}
-					tickStroke='#ffffff'
+					tickStroke="#ffffff"
 				/>
 
 				{/* Y-axis */}
 				<AxisLeft
 					scale={yScale}
 					top={margin.top}
-					stroke='#ffffff'
+					stroke="#ffffff"
 					left={margin.left}
 					label="Number of Commits"
-					tickLabelProps={{fill:"#ffffff"}}
-					tickStroke='#ffffff'
+					tickLabelProps={{ fill: "#ffffff" }}
+					tickStroke="#ffffff"
 				/>
 			</svg>
 			{tooltipOpen && tooltipData && (
-				<TooltipInPortal top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
+				<TooltipInPortal
+					top={tooltipTop}
+					left={tooltipLeft}
+					style={tooltipStyles}
+				>
 					<div>
 						<strong>Repo: {tooltipData.name}</strong>
 					</div>
@@ -156,6 +155,5 @@ export const BarChart = ({ data }: LineChartProps) => {
 				</TooltipInPortal>
 			)}
 		</div>
-	)
-}
-
+	);
+};
