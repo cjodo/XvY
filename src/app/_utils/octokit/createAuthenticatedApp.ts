@@ -1,7 +1,9 @@
-import { App } from "octokit"
+import { Octokit } from "octokit"
 
 export const createAuthenticatedApp = (appId: string, privateKey: string) => {
-	const app = new App({ appId, privateKey })
+	const app = new Octokit({ 
+		appId, privateKey 
+	})
 
 	return app
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useUser } from "@clerk/nextjs"
+import { useRouter } from "next/router";
 import { Group } from '@visx/group';
 import { Bar } from '@visx/shape';
 import { scaleLinear, scaleBand } from '@visx/scale';

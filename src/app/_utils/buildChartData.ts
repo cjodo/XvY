@@ -1,4 +1,4 @@
-import { GitRepoData, CommitData } from "~/types";
+import { CommitData } from "~/types";
 import { getCommitsPerRepo } from "./getGithubUserData";
 
 export const buildCommitData = async (data: GitRepoData[], withAuth: boolean) => {
