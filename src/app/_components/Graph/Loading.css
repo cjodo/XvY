@@ -1,0 +1,32 @@
+@keyframes pulse {
+	0% {
+		fill: #cc5500;
+		/* Start color */
+	}
+
+	33% {
+		fill: #ff7f00;
+		/* Intermediate color 1 */
+	}
+
+	66% {
+		fill: #ff9900;
+		/* Intermediate color 2 */
+	}
+
+	100% {
+		fill: #cc5500;
+		/* End color (same as start) */
+	}
+}
+
+.skeleton-bar {
+	animation: pulse 1.5s infinite;
+	transform-origin: bottom;
+	/* Ensures the scaling happens from the bottom */
+}
+
+.barchart {
+	transform: rotate(180deg);
+	overflow: visible;
+}

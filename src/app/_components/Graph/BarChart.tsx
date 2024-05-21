@@ -34,7 +34,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 	useEffect(() => {
 		// window is not defined until component mounts
 		setInnerwidth(window.innerWidth);
-	});
+	}, [window.innerWidth]);
 
 	const {
 		tooltipOpen,
@@ -96,6 +96,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 							height={height - margin.bottom - yScale(d.amount)}
 							width={xScale.bandwidth()}
 							fill="#cc5500"
+							rx={5}
 							className="bar"
 							onMouseLeave={() => {
 								tooltipTimeout = window.setTimeout(() => {
