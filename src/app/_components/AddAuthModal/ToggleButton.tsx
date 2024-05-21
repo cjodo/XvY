@@ -20,7 +20,7 @@ export const ToggleButton = () => {
 				Add API Key
 			</button>
 
-			<div>{open && <Modal setToggle={setOpen} />}</div>
+			<div>{open && <Modal setOpen={setOpen} />}</div>
 		</>
 	);
 };

@@ -8,6 +8,7 @@ import { hasGithubConnected } from "../../_utils/hasGithubConnected";
 import { getRepos } from "~/app/_services/getGithubUserData";
 
 import { buildCommitData } from "~/app/_utils/buildChartData";
+import { Toast } from "./Toast/Toast";
 
 interface GraphProps {
 	withAuth: boolean;
@@ -18,7 +19,8 @@ export const Graph = async ({ passedUsername, withAuth }: GraphProps) => {
 	if (passedUsername) {
 		let repos;
 		try {
-			repos = await getRepos(passedUsername, withAuth);
+			const res = await getRepos(passedUsername, withAuth);
+			repos = res.data.items;
 		} catch (err) {
 			console.error(err);
 			return <p>Failed</p>;
@@ -78,6 +80,7 @@ export const Graph = async ({ passedUsername, withAuth }: GraphProps) => {
 			<div className="flex flex-col text-center">
 				<h2 className="mb-4 text-white">
 					<strong>{GithubUserName}</strong>: Commits Last 90 Days{" "}
+					<Toast type="info" message="HELLO" />
 				</h2>
 				<BarChart data={commits} />
 			</div>

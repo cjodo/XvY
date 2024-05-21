@@ -4,7 +4,15 @@ import { GetResponseDataTypeFromEndpointMethod } from "@octokit/types";
 
 import { getApiKey } from "../_utils/user/getApiKey";
 
-const _octokit = new Octokit();
+const myFetch = (url: string) => {
+	fetch(url, {
+		next: { revalidate: 3600 },
+	});
+};
+
+const _octokit = new Octokit({
+	request: myFetch,
+});
 
 export const getUserEvents = async (userName: string) => {
 	const res = await fetch(`https://api.github.com/users/${userName}/events`, {
@@ -26,6 +34,7 @@ export const getRepos = async (
 	if (withAuth) {
 		const auth = await getApiKey(userName);
 		const octokit = new Octokit({
+			request: myFetch,
 			auth: auth?.key,
 		});
 
@@ -34,8 +43,7 @@ export const getRepos = async (
 		});
 		return repos;
 	} else {
-		const octokit = new Octokit();
-		const repos = await octokit.rest.search.repos({
+		const repos = await _octokit.rest.search.repos({
 			q: `user:${userName}`,
 		});
 		return repos;
@@ -53,6 +61,7 @@ export const getCommitsPerRepo = async (
 	if (withAuth) {
 		const token = await getApiKey(userName.toLowerCase());
 		const octokit = new Octokit({
+			request: myFetch,
 			auth: token?.key,
 		});
 
