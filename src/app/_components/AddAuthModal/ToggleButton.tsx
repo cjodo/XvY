@@ -1,29 +1,26 @@
-'use client'
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
-import { Modal } from "./Modal"
+import { Modal } from "./Modal";
 
 export const ToggleButton = () => {
-	const [toggle, setToggle] = useState(false);
+	const [open, setOpen] = useState(false);
 
 	const handleClick = () => {
-		setToggle(!toggle)
-	}
+		setOpen(!open);
+	};
 
 	return (
 		<>
+			<button
+				onClick={handleClick}
+				className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
+			>
+				Add API Key
+			</button>
 
-		<button onClick={handleClick} className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
-			Add API Key
-		</button>
-
-			<div>{
-				toggle && 
-					<Modal 
-					setToggle={setToggle}
-			/>}</div>
+			<div>{open && <Modal setToggle={setOpen} />}</div>
 		</>
-	)
-}
-
+	);
+};

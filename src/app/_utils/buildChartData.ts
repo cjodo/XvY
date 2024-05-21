@@ -1,26 +1,33 @@
-import { CommitData } from "~/types";
-import { getCommitsPerRepo } from "./getGithubUserData";
+import { CommitData, GitRepoData } from "~/types";
+import { getCommitsPerRepo } from "../_services/getGithubUserData";
 
-export const buildCommitData = async (data: GitRepoData[], withAuth: boolean) => {
+export const buildCommitData = async (
+	data: GitRepoData[],
+	withAuth: boolean,
+) => {
+	let commits: CommitData[] = [];
 
-	let commits:CommitData[] = []; 
-	
-	if(data){
-		for(let i = 0; i < data.length; i++){
-			const repo = data[i]
-			if(repo){
-				const repoData = await getCommitsPerRepo(repo.name, repo.owner.login, withAuth)
+	if (data) {
+		for (let i = 0; i < data.length; i++) {
+			const repo = data[i];
+			if (repo) {
+				const repoData = await getCommitsPerRepo(
+					repo.name,
+					repo.owner.login,
+					withAuth,
+				);
 
-				const amountOfCommits: number = repoData.length
+				const amountOfCommits: number = repoData.data.length;
 
 				commits.push({
-					name: repo.name, 
-					amount: amountOfCommits, 
-					repoURL: repo.html_url})
+					name: repo.name,
+					amount: amountOfCommits,
+					repoURL: repo.html_url,
+				});
 			}
 		}
 	} else {
-		console.error("no data")
+		console.error("no data");
 	}
-	return commits
+	return commits;
 };
