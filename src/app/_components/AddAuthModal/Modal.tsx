@@ -5,7 +5,7 @@ import { postGhKey } from "~/app/_services/postGhKey";
 import { useRouter } from "next/router";
 
 interface ModalParams {
-	setOpen: (toggle: boolean) => void;
+	setOpen: (open: boolean) => void;
 }
 
 export const Modal = ({ setOpen }: ModalParams) => {
@@ -13,8 +13,6 @@ export const Modal = ({ setOpen }: ModalParams) => {
 	const [exp, setExp] = useState("");
 	const [unlimited, setUnlimited] = useState(false);
 	const [invalidMessage, setInvalidMessage] = useState("");
-
-	const router = useRouter();
 
 	const { user, isSignedIn } = useUser();
 
@@ -60,7 +58,6 @@ export const Modal = ({ setOpen }: ModalParams) => {
 
 		if (exp) {
 			postGhKey(key, username, exp);
-			router.reload();
 			close();
 		} else {
 			setInvalidMessage("Must have an expiration date or check No Expiration");
