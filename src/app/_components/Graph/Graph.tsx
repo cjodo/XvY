@@ -19,10 +19,11 @@ interface GraphProps {
 export const Graph = async ({passedUsername, withAuth}: GraphProps) => {
 
 	if(passedUsername) {
-		const res = await getRepos(passedUsername, withAuth);
-		const repos = await res.items
+		const repos = await getRepos(passedUsername, withAuth);
 
-		const commits = buildCommitData(repos, withAuth);
+		console.log(repos)
+
+		const commits = await buildCommitData(repos, withAuth);
 
 		return (
 			<div className="flex w-full my-auto justify-center">
