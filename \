@@ -1,0 +1,24 @@
+import { Group } from "@visx/group";
+import { RectClipPath } from "@visx/clip-path";
+import { Bar } from "@visx/shape";
+
+interface SkeletonBarChartProps {
+	width: number;
+	height: number;
+	numBars: number;
+	barHeight: number;
+	barSpacing: number;
+	borderRadius: number;
+}
+
+export const LoadingGraph = ({
+	width,
+	height,
+	numBars,
+	barHeight,
+	barSpacing,
+}: SkeletonBarChartProps) => {
+	const barWidth = (width - (numBars - 1) * barSpacing) / numBars;
+
+	return <svg></svg>;
+};
