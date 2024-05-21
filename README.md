@@ -7,9 +7,10 @@ npm install
 ```
 
 ## TODO
+- [  ] Fully migrate to octokit
+- [  ] Add Api key exp
+- [  ] Add Home Page
 - [  ] Custom Signup page
 - [  ] Styles
-- [  ] Add Home Page
-- [  ] Migrate to octokit
 - [  ] Tests
 
