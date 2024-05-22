@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { Group } from "@visx/group";
 import { Bar } from "@visx/shape";
 import { scaleLinear, scaleBand } from "@visx/scale";
@@ -29,7 +28,10 @@ const tooltipStyles = {
 
 export const BarChart = ({ data }: LineChartProps) => {
 	const [innerWidth, setInnerwidth] = useState(0);
-	const { isLoaded } = useUser();
+
+	if (!window) {
+		return;
+	}
 
 	useEffect(() => {
 		// window is not defined until component mounts
@@ -79,10 +81,6 @@ export const BarChart = ({ data }: LineChartProps) => {
 			textAnchor: "start",
 			angle: 45,
 		}) as const;
-
-	if (!isLoaded) {
-		return <p className="w-full text-center">...Loading</p>;
-	}
 
 	return (
 		<div style={{ position: "relative" }}>
