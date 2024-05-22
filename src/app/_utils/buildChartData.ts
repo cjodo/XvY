@@ -1,11 +1,7 @@
 import { CommitData, GitRepoData } from "~/types";
 import { getCommitsPerRepo } from "../_services/getGithubUserData";
 
-export const buildCommitData = async (
-	data: GitRepoData[],
-	withAuth: boolean,
-	token: string | null,
-) => {
+export const buildCommitData = async (data: GitRepoData[], token: string) => {
 	let commits: CommitData[] = [];
 
 	if (data) {
@@ -15,7 +11,7 @@ export const buildCommitData = async (
 				const repoData = await getCommitsPerRepo(
 					repo.name,
 					repo.owner.login,
-					withAuth,
+					token,
 				);
 
 				const amountOfCommits: number = repoData.data.length;

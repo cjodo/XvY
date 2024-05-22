@@ -1,11 +1,11 @@
-import { Graph } from "./_components/Graph/Graph";
+import Link from "next/link";
 
 export const revalidate = 3600;
 
 export default async function HomePage() {
   return (
     <main className="align-center min-h-[calc(100vh-76px-100px)] justify-center p-5">
-      <Graph withAuth={true} />
+      <Link href={"/api/auth/signin"}>Sign In</Link>
     </main>
   );
 }
