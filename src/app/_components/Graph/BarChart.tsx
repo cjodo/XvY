@@ -29,10 +29,6 @@ const tooltipStyles = {
 export const BarChart = ({ data }: LineChartProps) => {
 	const [innerWidth, setInnerwidth] = useState(0);
 
-	if (!window) {
-		return;
-	}
-
 	useEffect(() => {
 		// window is not defined until component mounts
 		setInnerwidth(window.innerWidth);
