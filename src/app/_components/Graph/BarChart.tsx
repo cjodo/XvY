@@ -31,7 +31,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 
 	useEffect(() => {
 		// window is not defined until component mounts
-		setInnerwidth(window.innerWidth);
+		setInnerwidth((prev) => (prev = window.innerWidth));
 	}, [window.innerWidth]);
 
 	const {
