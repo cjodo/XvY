@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { RequestData } from "next/dist/server/web/types";
 
 export const POST = () => {
 	return NextResponse.json({ status: 200 });
@@ -8,6 +7,7 @@ export const POST = () => {
 export const GET = async (req: NextRequest, res: NextResponse) => {
 	const url = new URL(req.url).searchParams;
 	const code = url.get("code");
+
 	let redirectURL;
 
 	let env = process.env.NODE_ENV;
@@ -15,7 +15,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 	if (env === "development") {
 		redirectURL = "http://localhost:3000";
 	} else if (env === "production") {
-		redirectURL = "https://xv-y.vercel.app";
+		redirectURL = "https://production.com";
 	}
 
 	console.log(env);
@@ -32,6 +32,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 		);
 
 		const { access_token } = await res.json();
+
 		let response = NextResponse.redirect(new URL("/user", redirectURL), {
 			status: 302,
 		});
