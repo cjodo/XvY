@@ -1,13 +1,20 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { RequestData } from "next/dist/server/web/types";
 
 export const POST = () => {
 	return NextResponse.json({ status: 200 });
 };
 
-export const GET = async (req: RequestData) => {
+export const GET = async (req: NextRequest, res: NextResponse) => {
 	const url = new URL(req.url).searchParams;
 	const code = url.get("code");
+
+	const resHeaders = new Headers(req.headers);
+	const originURL = resHeaders.get("referer");
+
+	if (!originURL) {
+		throw new Error("Cannot determine origin");
+	}
 
 	if (code) {
 		const res = await fetch(
@@ -21,12 +28,9 @@ export const GET = async (req: RequestData) => {
 		);
 
 		const { access_token } = await res.json();
-		let response = NextResponse.redirect(
-			new URL("/user", "http://localhost:3000"),
-			{
-				status: 302,
-			},
-		);
+		let response = NextResponse.redirect(new URL("user", originURL), {
+			status: 302,
+		});
 
 		if (access_token) {
 			response.cookies.set("access_token", access_token);
