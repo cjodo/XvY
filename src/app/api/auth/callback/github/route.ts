@@ -8,13 +8,17 @@ export const POST = () => {
 export const GET = async (req: NextRequest, res: NextResponse) => {
 	const url = new URL(req.url).searchParams;
 	const code = url.get("code");
+	let redirectURL;
 
-	const resHeaders = new Headers(req.headers);
-	const originURL = resHeaders.get("referer");
+	let env = process.env.NODE_ENV;
 
-	if (!originURL) {
-		throw new Error("Cannot determine origin");
+	if (env === "development") {
+		redirectURL = "http://localhost:3000";
+	} else if (env === "production") {
+		redirectURL = "https://xv-y.vercel.app";
 	}
+
+	console.log(env);
 
 	if (code) {
 		const res = await fetch(
@@ -28,7 +32,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 		);
 
 		const { access_token } = await res.json();
-		let response = NextResponse.redirect(new URL("user", originURL), {
+		let response = NextResponse.redirect(new URL("/user", redirectURL), {
 			status: 302,
 		});
 
