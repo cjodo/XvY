@@ -22,8 +22,7 @@ export const Graph = async ({ token, user }: GraphProps) => {
 		// makes sure rate limit is not hit
 		commits = await buildCommitData(repos, token);
 	} catch (err) {
-		console.log("Rate limit hit");
-		console.log(repos);
+		console.error(err);
 	}
 
 	return (

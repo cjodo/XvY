@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LoginButton } from "../Login/LoginButton";
 
 export function Header() {
   return (
@@ -9,6 +10,7 @@ export function Header() {
             Home
           </Link>
         </div>
+        <LoginButton />
       </nav>
     </header>
   );
