@@ -21,7 +21,6 @@ export default async function Page() {
 
   try {
     login = await octokit.rest.users.getAuthenticated();
-    console.log(login);
   } catch (err) {
     console.error(err);
   }
