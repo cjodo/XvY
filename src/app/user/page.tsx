@@ -7,6 +7,8 @@ export default async function Page() {
   const cookieStore = cookies();
   const userToken = cookieStore.get("access_token");
 
+  console.log(userToken);
+
   if (!userToken) {
     return <p>No Token Found</p>;
   }

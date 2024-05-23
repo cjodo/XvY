@@ -8,7 +8,7 @@ npm install
 
 ## TODO
 - [ ] Fully migrate to octokit
-- [ ] Migrate to Github OAuth.  Make requests easier to authenticate ?
+- [x] Migrate to Github OAuth & Next Auth
 - [X] Add Api key exp
 - [ ] Add Home Page
 - [ ] Custom Signup page
