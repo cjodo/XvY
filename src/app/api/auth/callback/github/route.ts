@@ -22,7 +22,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
 	if (code) {
 		const res = await fetch(
-			`https://github.com/login/oauth/access_token?client_id=${process.env.GH_CLIENT_ID}&client_secret=${process.env.GH_CLIENT_SECRET}&code=${code}&redirect_uri=http://localhost/api/auth/callback/github`,
+			`https://github.com/login/oauth/access_token?client_id=${process.env.GH_CLIENT_ID}&client_secret=${process.env.GH_CLIENT_SECRET}&code=${code}&redirect_uri=${redirectURL}/api/auth/callback/github`,
 			{
 				method: "POST",
 				headers: {
