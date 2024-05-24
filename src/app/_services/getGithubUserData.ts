@@ -1,6 +1,7 @@
 import { Octokit } from "octokit";
 import { OctokitResponse } from "@octokit/types";
-import { GetResponseDataTypeFromEndpointMethod } from "@octokit/types";
+
+import { GitRepoResponse, GitCommitResponse } from "~/types";
 
 const myFetch = (url: string) => {
 	fetch(url, {
@@ -8,18 +9,10 @@ const myFetch = (url: string) => {
 	});
 };
 
-const _octokit = new Octokit({
-	request: myFetch,
-});
-
-export type GitRepoResponse = GetResponseDataTypeFromEndpointMethod<
-	typeof _octokit.rest.search.repos
->;
 export const getRepos = async (
 	token: string | null,
 	userName: string,
 ): Promise<OctokitResponse<GitRepoResponse>> => {
-	// Disgust
 	const octokit = new Octokit({
 		request: myFetch,
 		auth: token,
@@ -32,9 +25,6 @@ export const getRepos = async (
 	return repos;
 };
 
-export type GitCommitResponse = GetResponseDataTypeFromEndpointMethod<
-	typeof _octokit.rest.repos.listCommits
->;
 export const getCommitsPerRepo = async (
 	repoName: string,
 	userName: string,

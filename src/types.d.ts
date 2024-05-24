@@ -1,31 +1,20 @@
-export interface GithubUserData {
-	items: {
-		[login: string];
-	};
-}
+import { octokit } from "./lib/octokit";
 
-export interface GitEvent {
-	id: string;
-	type: "PushEvent" | "IssuesEvent" | "WatchEvent";
-	actor: string;
-	repo: {
-		name: string;
-	};
-}
+import { GetResponseTypeFromEndpointMethod } from "@octokit/types";
 
-export interface GitRepoData {
-	message?: string;
-	id: string;
+export type GitRepoResponse = GetResponseTypeFromEndpointMethod<
+	typeof _octokit.rest.search.repos
+>;
+
+export type GitCommitResponse = GetResponseTypeFromEndpointMethod<
+	typeof _octokit.rest.repos.listCommits
+>;
+
+export interface ChartData {
 	name: string;
-	full_name: string;
-	owner: {
-		login: string;
-	};
-	html_url: string;
-}
-
-export interface CommitData {
-	name: string;
-	amount: number;
-	repoURL: string;
+	commit: number;
+	repo_url: string;
+	issues?: number;
+	stargazers_count?: number;
+	watchers_count?: number;
 }

@@ -3,7 +3,7 @@ import { BarChart } from "./BarChart";
 
 import { buildCommitData } from "~/app/_utils/buildChartData";
 
-import { CommitData } from "~/types";
+import { GitCommitResponse } from "~/types";
 
 interface GraphProps {
 	token: string;
@@ -16,7 +16,7 @@ export const Graph = async ({ token, user }: GraphProps) => {
 	const res = await getRepos(token, user);
 	const repos = res.data.items;
 
-	let commits: CommitData[] = [];
+	let commits: GitCommitResponse[] = [];
 
 	try {
 		// makes sure rate limit is not hit
