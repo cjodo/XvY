@@ -15,7 +15,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 	if (env === "development") {
 		redirectURL = "http://localhost:3000";
 	} else if (env === "production") {
-		redirectURL = "https://production.com";
+		redirectURL = "https://xv-y.vercel.app";
 	}
 
 	console.log(env);
