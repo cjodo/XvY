@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { Group } from "@visx/group";
 import { Bar } from "@visx/shape";
 import { scaleLinear, scaleBand } from "@visx/scale";
@@ -7,27 +9,24 @@ import { AxisBottom, AxisLeft, TickLabelProps } from "@visx/axis";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 import { localPoint } from "@visx/event";
 
-import { CommitData } from "~/types";
-import { useEffect, useState } from "react";
+import { ChartData } from "~/types";
+import { use, useEffect, useState } from "react";
 
 interface LineChartProps {
-	data: CommitData[];
+	data: ChartData[];
 }
-
-type TooltipData = {
-	name: string;
-	amount: number;
-};
 
 const tooltipStyles = {
 	...defaultStyles,
 	minWidth: 60,
-	backgroundColor: "rgba(0,0,0,0.9)",
+	backgroundColor: "rgba(0,0,0,0.7)",
 	color: "white",
 };
 
 export const BarChart = ({ data }: LineChartProps) => {
 	const [innerWidth, setInnerwidth] = useState(0);
+
+	const router = useRouter();
 
 	useEffect(() => {
 		// window is not defined until component mounts
@@ -41,7 +40,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 		tooltipData,
 		hideTooltip,
 		showTooltip,
-	} = useTooltip<TooltipData>();
+	} = useTooltip<ChartData>();
 
 	const { containerRef, TooltipInPortal } = useTooltipInPortal({
 		scroll: true,
@@ -66,7 +65,7 @@ export const BarChart = ({ data }: LineChartProps) => {
 
 	const yScale = scaleLinear({
 		range: [height - margin.bottom, margin.top],
-		domain: [0, Math.max(...data.map((d) => d.amount))],
+		domain: [0, Math.max(...data.map((d) => d.commit))],
 	});
 
 	const XtickLabelProps: TickLabelProps<any> = () =>
@@ -82,12 +81,12 @@ export const BarChart = ({ data }: LineChartProps) => {
 		<div style={{ position: "relative" }}>
 			<svg ref={containerRef} width={width} height={height}>
 				<Group>
-					{data.map((d: CommitData) => (
+					{data.map((d: ChartData) => (
 						<Bar
 							key={d.name}
 							x={xScale(d.name) + margin.left} // Puts the bar in the middle of the tick
-							y={yScale(d.amount)}
-							height={height - margin.bottom - yScale(d.amount)}
+							y={yScale(d.commit)}
+							height={height - margin.bottom - yScale(d.commit)}
 							width={xScale.bandwidth()}
 							fill="#cc5500"
 							rx={5}
@@ -98,8 +97,8 @@ export const BarChart = ({ data }: LineChartProps) => {
 								}, 300);
 							}}
 							onClick={() => {
-								const repoUrl = d.repoURL;
-								window.open(repoUrl);
+								const repo = d.name;
+								router.push(`/user/${repo}`);
 							}}
 							onMouseMove={(event) => {
 								if (tooltipTimeout) clearTimeout(tooltipTimeout);
@@ -144,9 +143,10 @@ export const BarChart = ({ data }: LineChartProps) => {
 					style={tooltipStyles}
 				>
 					<div>
-						<strong>Repo: {tooltipData.name}</strong>
+						<strong>{tooltipData.name}</strong>
 					</div>
-					<div>Commits: {tooltipData.amount}</div>
+					<div>Commits: {tooltipData.commit}</div>
+					<div>Issues: {tooltipData.issues}</div>
 				</TooltipInPortal>
 			)}
 		</div>

@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { Octokit } from "octokit";
 
+import Link from "next/link";
+
 import { Graph } from "../_components/Graph/Graph";
 
 export default async function Page() {
@@ -25,10 +27,18 @@ export default async function Page() {
     console.error(err);
   }
 
+  if (!login) {
+    return (
+      <p>
+        Please <Link href="/api/auth/signin">Login</Link>
+      </p>
+    );
+  }
+
   return (
     <main className="align-center min-h-[calc(100vh-76px-100px)] justify-center p-5">
       <Graph
-        key={login}
+        key={login.data.login}
         token={userToken?.value}
         user={login.data.login}
       ></Graph>
