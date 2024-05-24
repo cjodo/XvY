@@ -7,8 +7,12 @@ export default function Dashboard({ params }: { params: { repo: string } }) {
   const token = cookieStore.get("access_token");
 
   if (!token) {
-    return null;
+    return new Error("No token found");
   }
 
-  return <></>;
+  return (
+    <>
+      <div className="w-full text-center text-xl">{repoName}</div>
+    </>
+  );
 }
