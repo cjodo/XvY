@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Group } from "@visx/group";
-import { Bar, BarStack } from "@visx/shape";
+import { Bar } from "@visx/shape";
 import { scaleLinear, scaleBand, scaleOrdinal } from "@visx/scale";
 import { localPoint } from "@visx/event";
 
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
-import { AxisBottom, AxisLeft, TickLabelProps } from "@visx/axis";
+import { AxisBottom, TickLabelProps } from "@visx/axis";
 
 import { ChartData, GraphMargin } from "~/types";
 
@@ -31,12 +31,17 @@ const blue = "#3498db";
 const orange = "#e67e22";
 const green = "#27ae60";
 
-const colorScale = scaleOrdinal({
-	domain: ["commit", "pr", "pr"],
-	range: [blue, orange, green],
+const background = "#eeeeee33";
+
+const keys = ["commit", "issues", "pr"];
+const colors = [blue, orange, green];
+
+const colorScale = scaleOrdinal<string, string>({
+	domain: keys,
+	range: colors,
 });
 
-export const BarChart = ({ data }: BarStackProps) => {
+export const BarStack = ({ data }: BarStackProps) => {
 	const [innerWidth, setInnerwidth] = useState(0);
 
 	const router = useRouter();
@@ -70,16 +75,28 @@ export const BarChart = ({ data }: BarStackProps) => {
 	const width = Math.min(800, innerWidth - 40);
 	const height = 600;
 
-	const xScale = scaleBand({
-		range: [margin.left, width - margin.right],
+	const xMax = width;
+	const yMax = height - margin.top;
+
+	const xScale = scaleBand<string>({
 		domain: data.map((d) => d.name),
 		padding: 0.2,
 	});
 
 	const yScale = scaleLinear({
-		range: [height - margin.bottom, margin.top],
-		domain: [0, Math.max(...data.map((d) => d.commit))],
+		domain: [
+			0,
+			Math.max(
+				...data.map(
+					(d) => d.commit + (d.issues ?? 0) + (d.stargazers_count ?? 0),
+				),
+			),
+		],
+		nice: true,
 	});
+
+	xScale.rangeRound([0, xMax]);
+	yScale.range([yMax, 0]);
 
 	const XtickLabelProps: TickLabelProps<any> = () =>
 		({
@@ -90,7 +107,7 @@ export const BarChart = ({ data }: BarStackProps) => {
 			angle: 45,
 		}) as const;
 
-	return (
+	return width < 10 ? null : (
 		<div style={{ position: "relative" }}>
 			<svg ref={containerRef} width={width + 40} height={height}>
 				<rect // Background
@@ -98,43 +115,55 @@ export const BarChart = ({ data }: BarStackProps) => {
 					y={0}
 					width={width + 40}
 					height={height}
-					fill="#eeeeee33"
-					rx={10}
+					fill={background}
+					rx={15}
 				/>
-				<Group>
-					{data.map((d: ChartData) => (
-						<Bar
-							key={d.name}
-							x={xScale(d.name) + margin.left} // Puts the bar in the middle of the tick
-							y={yScale(d.commit)}
-							height={height - margin.bottom - yScale(d.commit)}
-							width={xScale.bandwidth()}
-							fill={blue}
-							rx={5}
-							className="bar"
-							onMouseLeave={() => {
-								tooltipTimeout = window.setTimeout(() => {
-									hideTooltip();
-								}, 300);
-							}}
-							onClick={() => {
-								const repo = d.name;
-								router.push(`/user/${repo}`);
-							}}
-							onMouseMove={(event) => {
-								if (tooltipTimeout) clearTimeout(tooltipTimeout);
-								const eventSvgCoords = localPoint(event);
-								const left = xScale(d.name) - margin.left;
-								showTooltip({
-									tooltipData: d,
-									tooltipTop: eventSvgCoords?.y,
-									tooltipLeft: left,
-								});
-							}}
-						/>
-					))}
+				<Group top={margin.top}>
+					<BarStack<string, string>
+						data={data}
+						keys={keys}
+						x={(d) => d.name}
+						xScale={xScale}
+						yScale={yScale}
+						color={colorScale}
+					>
+						{(barStacks) =>
+							barStacks.map((barStack) =>
+								barStack.bars.map((bar) => (
+									<rect
+										key={`bar-stack-${barStack.index}-${bar.index}`}
+										x={bar.x}
+										y={bar.y}
+										height={bar.height}
+										width={bar.width}
+										fill={bar.color}
+										onClick={() => {
+											console.log("Click");
+										}}
+										onMouseLeave={() => {
+											tooltipTimeout = window.setTimeout(() => {
+												hideTooltip();
+											}, 300);
+										}}
+										onMouseMove={(event) => {
+											if (tooltipTimeout) clearTimeout(tooltipTimeout);
+											// TooltipInPortal expects coordinates to be relative to containerRef
+											// localPoint returns coordinates relative to the nearest SVG, which
+											// is what containerRef is set to in this example.
+											const eventSvgCoords = localPoint(event);
+											const left = bar.x + bar.width / 2;
+											showTooltip({
+												tooltipData: bar,
+												tooltipTop: eventSvgCoords?.y,
+												tooltipLeft: left,
+											});
+										}}
+									/>
+								)),
+							)
+						}
+					</BarStack>
 				</Group>
-
 				{/* X-axis */}
 				<AxisBottom
 					numTicks={xScale.bandwidth()}
