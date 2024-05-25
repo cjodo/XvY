@@ -18,3 +18,10 @@ export interface ChartData {
 	stargazers_count?: number;
 	watchers_count?: number;
 }
+
+export interface GraphMargin {
+	top: number;
+	right: number;
+	bottom: number;
+	left: number;
+}
