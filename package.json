@@ -9,7 +9,8 @@
     "db:studio": "drizzle-kit studio",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@octokit/auth-app": "^7.0.0",
@@ -44,6 +45,7 @@
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
+    "cypress": "^13.10.0",
     "drizzle-kit": "^0.21.2",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.1.3",

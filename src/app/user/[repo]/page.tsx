@@ -12,7 +12,7 @@ export default function Dashboard({ params }: { params: { repo: string } }) {
 
   return (
     <>
-      <div className="w-full text-center text-xl">{repoName}</div>
+      <h2 className="w-full text-center text-xl">{repoName}</h2>
     </>
   );
 }
