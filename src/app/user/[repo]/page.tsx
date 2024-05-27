@@ -7,7 +7,7 @@ export default function Dashboard({ params }: { params: { repo: string } }) {
   const token = cookieStore.get("access_token");
 
   if (!token) {
-    return new Error("No token found");
+    <h2>No Token Found Please Log In</h2>;
   }
 
   return (
