@@ -5,14 +5,14 @@ import Link from "next/link";
 
 import { Graph } from "../_components/Graph/Graph";
 
-export default async function Page() {
+export default async function User() {
   const cookieStore = cookies();
   const userToken = cookieStore.get("access_token");
 
   console.log(userToken);
 
   if (!userToken) {
-    return <p>No Token Found</p>;
+    return <h2>No Token Found</h2>;
   }
 
   const octokit = new Octokit({
