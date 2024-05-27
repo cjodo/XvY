@@ -1,5 +1,3 @@
-import { beforeEach } from "node:test";
-
 describe("GHAuth", () => {
   beforeEach(function() {
     cy.loginToGithub(Cypress.env("gh_username"), Cypress.env("gh_password"));
