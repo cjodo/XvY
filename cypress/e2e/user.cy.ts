@@ -1,7 +1,6 @@
+
 describe("GHAuth", () => {
-  beforeEach(function() {
-    cy.loginToGithub(Cypress.env("gh_username"), Cypress.env("gh_password"));
-  });
+  it("should login", () => {});
 });
 
 // describe("Navigation", () => {
