@@ -1,5 +1,4 @@
 import { octokit } from "./lib/octokit";
-
 import { GetResponseTypeFromEndpointMethod } from "@octokit/types";
 
 export type GitRepoResponse = GetResponseTypeFromEndpointMethod<
