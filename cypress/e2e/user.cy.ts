@@ -1,8 +1,3 @@
-
-describe("GHAuth", () => {
-  it("should login", () => {});
-});
-
 // describe("Navigation", () => {
 //   // LOGIN
 //   it("Navigate to a repo page", () => {
