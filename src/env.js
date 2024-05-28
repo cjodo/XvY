@@ -12,7 +12,9 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     GH_CLIENT_ID: z.string(),
-    GH_CLIENT_SECRET: z.string()
+    GH_CLIENT_SECRET: z.string(),
+    USERNAME: z.string(),
+    PASSWORD: z.string(),
   },
 
 
@@ -33,7 +35,7 @@ export const env = createEnv({
     POSTGRES_URL: process.env.POSTGRES_URL,
     NODE_ENV: process.env.NODE_ENV,
     GH_CLIENT_ID: process.env.GH_CLIENT_ID,
-    GH_CLIENT_SECRET: process.env.GH_CLIENT_SECRET
+    GH_CLIENT_SECRET: process.env.GH_CLIENT_SECRET,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
