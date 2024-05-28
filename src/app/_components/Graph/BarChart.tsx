@@ -14,6 +14,8 @@ import { AxisBottom, TickLabelProps } from "@visx/axis";
 import { ChartData, GraphMargin } from "~/types";
 import { Colors } from "~/styles/colors";
 
+import { useResizeLoad } from "~/app/_hooks/useResizeLoad";
+
 interface BarStackProps {
 	data: ChartData[];
 	width: number;
@@ -31,11 +33,7 @@ const tooltipStyles = {
 export const BarChart = ({ data }: BarStackProps) => {
 	const router = useRouter();
 
-	const [innerWidth, setInnerwidth] = useState(0);
-	useEffect(() => {
-		// window is not defined until component mounts
-		setInnerwidth((prev) => (prev = window.innerWidth));
-	}, [window.innerWidth]);
+	const innerWidth = useResizeLoad();
 
 	const {
 		tooltipOpen,
@@ -58,7 +56,7 @@ export const BarChart = ({ data }: BarStackProps) => {
 		bottom: 130,
 		left: 20,
 	};
-	const width = Math.min(800, innerWidth - 40);
+	const width = Math.min(1000, innerWidth - 60);
 	const height = 600;
 
 	const xScale = scaleBand({
