@@ -1,16 +1,13 @@
 @keyframes pulse {
 	0% {
-		fill: #cc5500;
 		transform: scaleY(1);
 	}
 
 	50% {
-		fill: #ff500f;
 		transform: scaleY(0.8);
 	}
 
 	100% {
-		fill: #cc5500;
 		transform: scaleY(1);
 	}
 }

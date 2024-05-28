@@ -1,6 +1,7 @@
 import { Group } from "@visx/group";
 import { RectClipPath } from "@visx/clip-path";
 import { Bar } from "@visx/shape";
+import { Colors } from "~/styles/colors";
 
 import "./Loading.css";
 
@@ -43,6 +44,7 @@ export const SkeletonBarChart = ({
 								width={barWidth}
 								height={randomBarHeight()}
 								rx={borderRadius}
+								fill={Colors.blue}
 							/>
 						))}
 					</Group>

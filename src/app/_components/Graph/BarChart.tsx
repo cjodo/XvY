@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Group } from "@visx/group";
-import { Bar, BarStack } from "@visx/shape";
-import { scaleLinear, scaleBand, scaleOrdinal } from "@visx/scale";
+import { Bar } from "@visx/shape";
+import { scaleLinear, scaleBand } from "@visx/scale";
 import { localPoint } from "@visx/event";
 
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
-import { AxisBottom, AxisLeft, TickLabelProps } from "@visx/axis";
+import { AxisBottom, TickLabelProps } from "@visx/axis";
 
 import { ChartData, GraphMargin } from "~/types";
+import { Colors } from "~/styles/colors";
 
 interface BarStackProps {
 	data: ChartData[];
@@ -27,20 +28,10 @@ const tooltipStyles = {
 	color: "white",
 };
 
-const blue = "#3498db";
-const orange = "#e67e22";
-const green = "#27ae60";
-
-const colorScale = scaleOrdinal({
-	domain: ["commit", "pr", "pr"],
-	range: [blue, orange, green],
-});
-
 export const BarChart = ({ data }: BarStackProps) => {
-	const [innerWidth, setInnerwidth] = useState(0);
-
 	const router = useRouter();
 
+	const [innerWidth, setInnerwidth] = useState(0);
 	useEffect(() => {
 		// window is not defined until component mounts
 		setInnerwidth((prev) => (prev = window.innerWidth));
@@ -91,74 +82,76 @@ export const BarChart = ({ data }: BarStackProps) => {
 		}) as const;
 
 	return (
-		<div style={{ position: "relative" }}>
-			<svg ref={containerRef} width={width + 40} height={height}>
-				<rect // Background
-					x={0}
-					y={0}
-					width={width + 40}
-					height={height}
-					fill="#eeeeee33"
-					rx={10}
-				/>
-				<Group>
-					{data.map((d: ChartData) => (
-						<Bar
-							key={d.name}
-							x={xScale(d.name) + margin.left} // Puts the bar in the middle of the tick
-							y={yScale(d.commit)}
-							height={height - margin.bottom - yScale(d.commit)}
-							width={xScale.bandwidth()}
-							fill={blue}
-							rx={5}
-							className="bar"
-							onMouseLeave={() => {
-								tooltipTimeout = window.setTimeout(() => {
-									hideTooltip();
-								}, 300);
-							}}
-							onClick={() => {
-								const repo = d.name;
-								router.push(`/user/${repo}`);
-							}}
-							onMouseMove={(event) => {
-								if (tooltipTimeout) clearTimeout(tooltipTimeout);
-								const eventSvgCoords = localPoint(event);
-								const left = xScale(d.name) - margin.left;
-								showTooltip({
-									tooltipData: d,
-									tooltipTop: eventSvgCoords?.y,
-									tooltipLeft: left,
-								});
-							}}
-						/>
-					))}
-				</Group>
+		innerWidth >= 10 && (
+			<div style={{ position: "relative" }}>
+				<svg ref={containerRef} width={width + 40} height={height}>
+					<rect // Background
+						x={0}
+						y={0}
+						width={width + 40}
+						height={height}
+						fill="#eeeeee33" // Background
+						rx={10}
+					/>
+					<Group>
+						{data.map((d: ChartData) => (
+							<Bar
+								key={d.name}
+								x={xScale(d.name) + margin.left} // Puts the bar in the middle of the tick
+								y={yScale(d.commit)}
+								height={height - margin.bottom - yScale(d.commit)}
+								width={xScale.bandwidth()}
+								fill={Colors.blue}
+								rx={5}
+								className="bar"
+								onMouseLeave={() => {
+									tooltipTimeout = window.setTimeout(() => {
+										hideTooltip();
+									}, 300);
+								}}
+								onClick={() => {
+									const repo = d.name;
+									router.push(`/user/${repo}`);
+								}}
+								onMouseMove={(event) => {
+									if (tooltipTimeout) clearTimeout(tooltipTimeout);
+									const eventSvgCoords = localPoint(event);
+									const left = xScale(d.name) - margin.left;
+									showTooltip({
+										tooltipData: d,
+										tooltipTop: eventSvgCoords?.y,
+										tooltipLeft: left,
+									});
+								}}
+							/>
+						))}
+					</Group>
 
-				{/* X-axis */}
-				<AxisBottom
-					numTicks={xScale.bandwidth()}
-					scale={xScale}
-					top={height - margin.bottom}
-					left={margin.left}
-					stroke="#ffffff"
-					tickLabelProps={XtickLabelProps}
-					tickStroke="#ffffff"
-				/>
-			</svg>
-			{tooltipOpen && tooltipData && (
-				<TooltipInPortal
-					top={tooltipTop}
-					left={tooltipLeft}
-					style={tooltipStyles}
-				>
-					<div>
-						<strong>{tooltipData.name}</strong>
-					</div>
-					<div>Commits: {tooltipData.commit}</div>
-					<div>Issues: {tooltipData.issues}</div>
-				</TooltipInPortal>
-			)}
-		</div>
+					{/* X-axis */}
+					<AxisBottom
+						numTicks={xScale.bandwidth()}
+						scale={xScale}
+						top={height - margin.bottom}
+						left={margin.left}
+						stroke="#ffffff"
+						tickLabelProps={XtickLabelProps}
+						tickStroke="#ffffff"
+					/>
+				</svg>
+				{tooltipOpen && tooltipData && (
+					<TooltipInPortal
+						top={tooltipTop}
+						left={tooltipLeft}
+						style={tooltipStyles}
+					>
+						<div>
+							<strong>{tooltipData.name}</strong>
+						</div>
+						<div>Commits: {tooltipData.commit}</div>
+						<div>Issues: {tooltipData.issues}</div>
+					</TooltipInPortal>
+				)}
+			</div>
+		)
 	);
 };
