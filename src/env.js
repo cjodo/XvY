@@ -13,10 +13,7 @@ export const env = createEnv({
       .default("development"),
     GH_CLIENT_ID: z.string(),
     GH_CLIENT_SECRET: z.string(),
-    USERNAME: z.string(),
-    PASSWORD: z.string(),
   },
-
 
   /**
    * Specify your client-side environment variables schema here. This way you can ensure the app
