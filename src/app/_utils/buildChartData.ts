@@ -34,6 +34,5 @@ export const buildCommitData = async (
 		console.error("no data");
 	}
 
-	console.log(commits);
 	return commits;
 };
