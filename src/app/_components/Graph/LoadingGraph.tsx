@@ -44,7 +44,7 @@ export const SkeletonBarChart = ({
 								width={barWidth}
 								height={randomBarHeight()}
 								rx={borderRadius}
-								fill={Colors.blue}
+								fill={Colors.chart.blue}
 							/>
 						))}
 					</Group>

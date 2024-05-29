@@ -9,6 +9,9 @@ export function Header() {
           <Link className="py-2" href={"/"}>
             Home
           </Link>
+          <Link className="py-2" href={"/dashboard"}>
+            Dashboard
+          </Link>
         </div>
         <LoginButton />
       </nav>

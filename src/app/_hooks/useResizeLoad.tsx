@@ -7,6 +7,8 @@ export const useResizeLoad = () => {
       setInnerWidth(window.innerWidth);
     };
 
+    handleUpdate();
+
     window.addEventListener("load", handleUpdate);
     window.addEventListener("resize", handleUpdate);
 

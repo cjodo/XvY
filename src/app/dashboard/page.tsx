@@ -2,14 +2,13 @@ import { cookies } from "next/headers";
 import { Octokit } from "octokit";
 
 import Link from "next/link";
-
 import { Graph } from "../_components/Graph/Graph";
+
+export const dynamic = "force-dynamic";
 
 export default async function User() {
   const cookieStore = cookies();
   const userToken = cookieStore.get("access_token");
-
-  console.log(userToken);
 
   if (!userToken) {
     return <h2>No Token Found</h2>;
@@ -30,7 +29,8 @@ export default async function User() {
   if (!login) {
     return (
       <p>
-        Please <Link href="/api/auth/signin">Login</Link>
+        Api key no longer valid, please{" "}
+        <Link href="/api/auth/signin">Create A New One</Link>
       </p>
     );
   }

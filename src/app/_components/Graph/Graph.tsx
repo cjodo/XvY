@@ -1,5 +1,8 @@
 import { getRepos } from "~/app/_services/getGithubUserData";
 import { BarChart } from "./BarChart";
+import { Title } from "../Title/Title";
+
+import { Summary } from "../Summary/Summary";
 
 import { buildCommitData } from "~/app/_utils/buildChartData";
 
@@ -25,11 +28,14 @@ export const Graph = async ({ token, user }: GraphProps) => {
 	}
 
 	return (
-		<div className="my-auto flex w-full justify-center">
-			<div className="flex flex-col text-center">
-				<h2 className="mb-4 text-white">
-					<strong>{user}</strong>: Commits Last 90 Days{" "}
-				</h2>
+		<div className="my-auto w-full justify-center">
+			<Title>
+				<div>
+					<strong>{user}</strong> Dashboard
+				</div>
+			</Title>
+			<div className="flex flex justify-center text-center">
+				<Summary data={commits} />
 				<BarChart data={commits} />
 			</div>
 		</div>

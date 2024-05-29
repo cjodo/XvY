@@ -11,10 +11,10 @@ export const middleware = (req: NextRequest) => {
   if (!token) {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));
   } else {
-    return NextResponse.redirect(new URL("/user", req.url));
+    return;
   }
 };
 
 export const config = {
-  matcher: "/", //root only
+  matcher: "/dashboard", //root only
 };
