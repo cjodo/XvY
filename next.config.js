@@ -1,3 +1,6 @@
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
@@ -14,8 +17,8 @@ const config = {
   },
   logging: {
     fetches: {
-      fullUrl: true
-    }
+      fullUrl: true,
+    },
   },
 };
 

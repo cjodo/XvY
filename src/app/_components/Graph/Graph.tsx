@@ -2,6 +2,7 @@ import { getRepos } from "~/app/_services/getGithubUserData";
 import { BarChart } from "./BarChart";
 import { Title } from "../Title/Title";
 
+import { cache } from "react";
 import { Summary } from "../Summary/Summary";
 
 import { buildBarData } from "~/app/_utils/buildChartData";
@@ -15,15 +16,17 @@ interface GraphProps {
 export const Graph = async ({ token, user }: GraphProps) => {
 	if (!token) return <p className="w-full text-center">No Token Found</p>;
 
-	const res = await getRepos(token, user);
+	const cachedRepos = cache(getRepos);
+
+	const res = await cachedRepos(token, user);
 	const repos = res.data.items;
 
 	let commits: ChartData[] = [];
 
 	try {
 		// makes sure rate limit is not hit
-		commits = await buildBarData(repos, token);
-		console.log(commits);
+		const getBarData = cache(buildBarData);
+		commits = await getBarData(repos, token);
 	} catch (err) {
 		console.error(err);
 	}

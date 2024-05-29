@@ -5,9 +5,6 @@ export const middleware = (req: NextRequest) => {
   const cookieStore = cookies();
 
   const token = cookieStore.get("access_token");
-  console.log("middleware: ", token);
-  console.log(req.url);
-
   if (!token) {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));
   } else {

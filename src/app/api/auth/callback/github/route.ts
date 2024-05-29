@@ -33,7 +33,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
 		const { access_token } = await res.json();
 
-		let response = NextResponse.redirect(new URL("/user", redirectURL), {
+		let response = NextResponse.redirect(new URL("/dashboard", redirectURL), {
 			status: 302,
 		});
 
