@@ -16,6 +16,7 @@ export interface ChartData {
 	issues?: number;
 	stargazers_count?: number;
 	watchers_count?: number;
+	pull_requests?: number;
 }
 
 export interface GraphMargin {
@@ -23,4 +24,8 @@ export interface GraphMargin {
 	right: number;
 	bottom: number;
 	left: number;
+}
+export interface PieSlice {
+	label: string;
+	amount: number;
 }

@@ -1,22 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ChartData } from "~/types";
-
-import { TopRepo } from "./TopRepo";
+import { Title } from "../Title/Title";
+import { PieChart } from "../Graph/PieChart";
 
 interface SummaryProps {
 	data: ChartData[];
 }
 export const Summary = ({ data }: SummaryProps) => {
-	const [topRepo, setTopRepo] = useState({});
+	const topRepo = data.reduce((prev, curr) =>
+		prev.commit > curr.commit ? prev : curr,
+	);
 
-	useEffect(() => {
-		const topRepo = data.reduce((prev, curr) =>
-			prev.commit > curr.commit ? prev : curr,
-		);
-		setTopRepo(topRepo);
-	});
-
-	return null;
+	return (
+		<div className="flex-col">
+			<Title>
+				<div className="mx-4 mb-2 rounded bg-[#eeeeee33]">
+					<strong>Summary: </strong>
+				</div>
+			</Title>
+			<PieChart data={topRepo} width={200} height={200} />;
+		</div>
+	);
 };

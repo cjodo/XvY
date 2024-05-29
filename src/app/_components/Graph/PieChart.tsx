@@ -4,13 +4,16 @@ import { Pie } from "@visx/shape";
 import { Group } from "@visx/group";
 import { scaleOrdinal } from "@visx/scale";
 import { Colors } from "~/styles/colors";
+import { localPoint } from "@visx/event";
+import { Text } from "@visx/text";
 
-import { useResizeLoad } from "~/app/_hooks/useResizeLoad";
-import { ChartData } from "~/types";
+import { useTooltip, TooltipWithBounds } from "@visx/tooltip";
+
+import { ChartData, PieSlice } from "~/types";
+import { buildPieData } from "~/app/_utils/buildChartData";
 
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
-
-const amount = (d: ChartData) => d.commit;
+const colors = Object.values(Colors.chart);
 
 interface PieProps {
   data: ChartData;
@@ -19,53 +22,73 @@ interface PieProps {
   margin?: typeof defaultMargin;
 }
 export const PieChart = ({ data, width, height, margin }: PieProps) => {
-  const innerWidth = useResizeLoad();
-  const innerHeight = height - margin.top - margin.bottom;
-  const radius = Math.min(innerWidth, innerHeight) / 2;
-  const centerY = innerHeight / 2;
-  const centerX = innerWidth / 2;
-  const top = centerY + margin.top;
-  const left = centerX + margin.left;
-  const pieSortValues = (a, b) => b - a;
+  let slices = buildPieData(data);
+
+  const { tooltipData, tooltipLeft, tooltipTop, showTooltip, hideTooltip } =
+    useTooltip<PieSlice>();
+
+  const colorScale = scaleOrdinal({
+    domain: slices.map((d) => d.label),
+    range: colors,
+  });
 
   return (
-    <svg width={width} height={height}>
-      <Group top={top} left={left}>
-        <Pie
-          data={data}
-          pieValue={amount}
-          pieSortValues={pieSortValues}
-          outerRadius={radius}
-        >
-          {(pie) => {
-            return pie.arcs.map((arc, index) => {
-              const { commit } = arc.data;
-              const [centroidX, centroidY] = pie.path.centroid(arc);
-              const hasSpaceForLabel = arc.endAngle - arc.startAngle >= 0.1;
-              const arcPath = pie.path(arc);
-              const arcFill = getLetterFrequencyColor(letter);
-              return (
-                <g key={`arc-${commit}-${index}`}>
-                  <path d={arcPath} fill={arcFill} />
-                  {hasSpaceForLabel && (
-                    <text
-                      x={centroidX}
-                      y={centroidY}
-                      dy=".33em"
-                      fill="#ffffff"
-                      fontSize={22}
-                      textAnchor="middle"
-                      pointerEvents="none"
-                    >
-                      {arc.data.commit}
-                    </text>
-                  )}
+    <div style={{ position: "relative" }} className="mx-2 px-2">
+      <svg width={width} height={height}>
+        <rect // Background
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          fill="#eeeeee33" // Background
+          rx={10}
+        />
+        <Group top={height / 2} left={width / 2}>
+          <Pie
+            data={slices}
+            pieValue={(d) => d.amount}
+            outerRadius={width / 2.2}
+            innerRadius={50}
+            padAngle={0.02}
+          >
+            {(pie) =>
+              pie.arcs.map((arc) => (
+                <g
+                  key={arc.data.label}
+                  onMouseMove={(event: MouseEvent) => {
+                    const coords = localPoint(event) || { x: 0, y: 0 };
+                    showTooltip({
+                      tooltipData: arc.data,
+                      tooltipLeft: coords.x,
+                      tooltipTop: coords.y,
+                    });
+                  }}
+                  onMouseLeave={() => hideTooltip()}
+                >
+                  <path
+                    d={pie.path(arc) || undefined}
+                    fill={colorScale(arc.data.label)}
+                  />
                 </g>
-              );
-            });
-          }}
-        </Pie>
-      </Group>
-    </svg>
+              ))
+            }
+          </Pie>
+        </Group>
+        <Text
+          verticalAnchor="start"
+          dx={width / 8}
+          y={5}
+          fill="#eeeeee"
+          style={{ fontSize: 16, fontWeight: "bold" }}
+        >
+          {data.name}
+        </Text>
+      </svg>
+      {tooltipData && (
+        <TooltipWithBounds left={tooltipLeft} top={tooltipTop}>
+          {tooltipData.label}: {tooltipData.amount}
+        </TooltipWithBounds>
+      )}
+    </div>
   );
 };

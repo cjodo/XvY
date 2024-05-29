@@ -1,5 +1,5 @@
 import { Octokit } from "octokit";
-import { OctokitResponse } from "@octokit/types";
+import { OctokitResponse, Endpoints } from "@octokit/types";
 
 import { GitRepoResponse, GitCommitResponse } from "~/types";
 
@@ -29,17 +29,35 @@ export const getCommitsPerRepo = async (
 	repoName: string,
 	userName: string,
 	token: string,
-): Promise<OctokitResponse<GitCommitResponse>> => {
+) => {
 	const octokit = new Octokit({
 		request: myFetch,
 		auth: token,
 	});
 
-	const commits = await octokit.rest.repos.listCommits({
+	const commits = await octokit.paginate(octokit.rest.repos.listCommits, {
 		owner: userName,
 		repo: repoName,
-		per_page: 100,
 	});
 
 	return commits;
+};
+
+export const getPullsPerRepo = async (
+	repo: string,
+	owner: string,
+	token: string,
+) => {
+	const octokit = new Octokit({
+		request: myFetch,
+		auth: token,
+	});
+
+	const pulls = await octokit.rest.pulls.list({
+		state: "all",
+		owner: owner,
+		repo: repo,
+	});
+
+	return pulls.data;
 };

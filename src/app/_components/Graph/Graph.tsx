@@ -4,7 +4,7 @@ import { Title } from "../Title/Title";
 
 import { Summary } from "../Summary/Summary";
 
-import { buildCommitData } from "~/app/_utils/buildChartData";
+import { buildBarData } from "~/app/_utils/buildChartData";
 
 import { ChartData } from "~/types";
 
@@ -22,7 +22,8 @@ export const Graph = async ({ token, user }: GraphProps) => {
 
 	try {
 		// makes sure rate limit is not hit
-		commits = await buildCommitData(repos, token);
+		commits = await buildBarData(repos, token);
+		console.log(commits);
 	} catch (err) {
 		console.error(err);
 	}
