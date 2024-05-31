@@ -1,4 +1,4 @@
-import { GitRepoResponse, ChartData, PieSlice } from "~/types";
+import { GitRepoResponse, ChartData, PieSlice, Languages } from "~/types";
 import { OctokitResponse } from "@octokit/types";
 import {
 	getCommitsPerRepo,

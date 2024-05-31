@@ -7,7 +7,7 @@ import { Summary } from "../Summary/Summary";
 
 import { buildBarData } from "~/app/_utils/buildChartData";
 
-import { ChartData } from "~/types";
+import { ChartData, Languages } from "~/types";
 
 interface GraphProps {
 	token: string;
@@ -39,7 +39,7 @@ export const Graph = async ({ token, user }: GraphProps) => {
 				</div>
 			</Title>
 			<div className="flex flex justify-center text-center">
-				<Summary data={commits} />
+				<Summary data={commits} user={user} />
 				<BarChart data={commits} />
 			</div>
 		</div>

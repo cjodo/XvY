@@ -1,7 +1,7 @@
 import { Octokit } from "octokit";
 import { OctokitResponse, Endpoints } from "@octokit/types";
 
-import { GitRepoResponse, GitCommitResponse } from "~/types";
+import { GitRepoResponse } from "~/types";
 
 const myFetch = (url: string) => {
   fetch(url, {

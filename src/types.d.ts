@@ -29,3 +29,14 @@ export interface PieSlice {
 	label: string;
 	amount: number;
 }
+
+export interface LanguageStats {
+	[language: string]: number;
+}
+
+export interface LanguageStatsWithColor {
+	[language: string]: {
+		bytes: number;
+		color?: string;
+	};
+}
