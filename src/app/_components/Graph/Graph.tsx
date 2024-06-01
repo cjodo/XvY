@@ -7,7 +7,7 @@ import { Summary } from "../Summary/Summary";
 
 import { buildBarData } from "~/app/_utils/buildChartData";
 
-import { ChartData, Languages } from "~/types";
+import { ChartData } from "~/types";
 
 interface GraphProps {
 	token: string;
@@ -17,6 +17,7 @@ export const Graph = async ({ token, user }: GraphProps) => {
 	if (!token) return <p className="w-full text-center">No Token Found</p>;
 
 	const cachedRepos = cache(getRepos);
+	const getBarData = cache(buildBarData);
 
 	const res = await cachedRepos(token, user);
 	const repos = res.data.items;
@@ -24,8 +25,6 @@ export const Graph = async ({ token, user }: GraphProps) => {
 	let commits: ChartData[] = [];
 
 	try {
-		// makes sure rate limit is not hit
-		const getBarData = cache(buildBarData);
 		commits = await getBarData(repos, token);
 	} catch (err) {
 		console.error(err);

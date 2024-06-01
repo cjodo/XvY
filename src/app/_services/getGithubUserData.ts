@@ -5,7 +5,6 @@ import { GitRepoResponse } from "~/types";
 
 const myFetch = (url: string) => {
   fetch(url, {
-    cache: "force-cache",
     next: { revalidate: 360 },
   });
 };
@@ -42,6 +41,24 @@ export const getCommitsPerRepo = async (
   });
 
   return commits;
+};
+
+export const getContributorsPerRepo = async (
+  repo: string,
+  owner: string,
+  token: string,
+) => {
+  const octokit = new Octokit({
+    request: myFetch,
+    auth: token,
+  });
+
+  const contributors = await octokit.rest.repos.listContributors({
+    repo: repo,
+    owner: owner,
+  });
+
+  return contributors.data.filter((c) => c.login === owner);
 };
 
 export const getPullsPerRepo = async (

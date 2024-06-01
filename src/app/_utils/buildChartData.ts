@@ -1,7 +1,7 @@
 import { GitRepoResponse, ChartData, PieSlice, Languages } from "~/types";
 import { OctokitResponse } from "@octokit/types";
 import {
-	getCommitsPerRepo,
+	getContributorsPerRepo,
 	getPullsPerRepo,
 } from "../_services/getGithubUserData";
 
@@ -20,10 +20,15 @@ export const buildBarData = async (
 			const repoName = repo.name;
 			const owner = repo.owner.login;
 
-			const repoData = await getCommitsPerRepo(repoName, owner, token);
-			const pulls = await getPullsPerRepo(repoName, owner, token);
+			const pullsData = getPullsPerRepo(repoName, owner, token);
+			const contributorsData = getContributorsPerRepo(repoName, owner, token);
 
-			const numCommits = repoData.length;
+			const [pulls, contributors] = await Promise.all([
+				pullsData,
+				contributorsData,
+			]); // parallel
+
+			const numCommits = contributors[0]?.contributions || 0; // will be an array of one value being the user contributions
 
 			commits.push({
 				name: repo.name,
