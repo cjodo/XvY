@@ -1,11 +1,15 @@
 import { Octokit } from "octokit";
-import { OctokitResponse, Endpoints } from "@octokit/types";
+import { OctokitResponse } from "@octokit/types";
 
 import { GitRepoResponse } from "~/types";
 
 const myFetch = (url: string) => {
   fetch(url, {
-    next: { revalidate: 360 },
+    cache: "force-cache",
+    headers: {
+      "Cache-Control": "public max-age=3600",
+    },
+    next: { revalidate: 3600 },
   });
 };
 

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { octokit } from "~/lib/octokit";
 
 export const POST = () => {
 	return NextResponse.json({ status: 200 });
@@ -32,6 +33,12 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 		);
 
 		const { access_token } = await res.json();
+		octokit.auth({
+			auth: access_token,
+		});
+
+		const isAuthenticated = await octokit.rest.users.getAuthenticated();
+		console.log("Auth: ", isAuthenticated.data.login);
 
 		let response = NextResponse.redirect(new URL("/dashboard", redirectURL), {
 			status: 302,
@@ -39,8 +46,8 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
 		if (access_token) {
 			response.cookies.set("access_token", access_token);
+			return response;
 		}
-		return response;
 	}
 	return NextResponse.json({ status: 200 });
 };

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export const middleware = (req: NextRequest) => {
+export const middleware = (res: NextResponse, req: NextRequest) => {
   const cookieStore = cookies();
 
   const token = cookieStore.get("access_token");
@@ -13,5 +13,5 @@ export const middleware = (req: NextRequest) => {
 };
 
 export const config = {
-  matcher: "/dashboard", //root only
+  matcher: ["/dashboard"],
 };

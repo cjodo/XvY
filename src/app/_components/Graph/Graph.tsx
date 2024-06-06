@@ -1,34 +1,19 @@
-import { getRepos } from "~/app/_services/getGithubUserData";
 import { BarChart } from "./BarChart";
 import { Title } from "../Title/Title";
+import { cookies } from "next/headers";
 
-import { cache } from "react";
 import { Summary } from "../Summary/Summary";
-
-import { buildBarData } from "~/app/_utils/buildChartData";
-
 import { ChartData } from "~/types";
 
 interface GraphProps {
-	token: string;
+	data: ChartData[];
 	user: string;
 }
-export const Graph = async ({ token, user }: GraphProps) => {
+export const Graph = async ({ data, user }: GraphProps) => {
+	const cookieStore = cookies();
+	const token = cookieStore.get("access_token")?.value;
+
 	if (!token) return <p className="w-full text-center">No Token Found</p>;
-
-	const cachedRepos = cache(getRepos);
-	const getBarData = cache(buildBarData);
-
-	const res = await cachedRepos(token, user);
-	const repos = res.data.items;
-
-	let commits: ChartData[] = [];
-
-	try {
-		commits = await getBarData(repos, token);
-	} catch (err) {
-		console.error(err);
-	}
 
 	return (
 		<div className="my-auto w-full justify-center">
@@ -38,8 +23,8 @@ export const Graph = async ({ token, user }: GraphProps) => {
 				</div>
 			</Title>
 			<div className="flex flex justify-center text-center">
-				<Summary data={commits} user={user} />
-				<BarChart data={commits} />
+				<Summary data={data} user={user} />
+				<BarChart data={data} />
 			</div>
 		</div>
 	);

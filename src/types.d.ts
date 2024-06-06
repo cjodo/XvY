@@ -40,3 +40,7 @@ export interface LanguageStatsWithColor {
 		color?: string;
 	};
 }
+
+export interface OctokitOptions {
+	auth: string;
+}

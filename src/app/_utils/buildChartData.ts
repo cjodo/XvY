@@ -13,6 +13,8 @@ export const buildBarData = async (
 
 	const repos = Array.from(data);
 
+	console.time("build");
+
 	if (repos) {
 		for (let i = 0; i < repos.length; i++) {
 			const repo: GitRepoResponse = repos[i];
@@ -26,7 +28,7 @@ export const buildBarData = async (
 			const [pulls, contributors] = await Promise.all([
 				pullsData,
 				contributorsData,
-			]); // parallel
+			]);
 
 			const numCommits = contributors[0]?.contributions || 0; // will be an array of one value being the user contributions
 
