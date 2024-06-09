@@ -16,9 +16,9 @@ const config = {
     ignoreDuringBuilds: true,
   },
   logging: {
-    fetches: {
-      fullUrl: true,
-    },
+    // fetches: {
+    //   fullUrl: true,
+    // },
   },
 };
 

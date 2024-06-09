@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-	@apply bg-slate-100;
-}
+/* body { */
+/* 	@apply bg-slate-100; */
+/* } */
 
 .bar:hover {
 	fill: #34a9db;

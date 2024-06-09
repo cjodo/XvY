@@ -24,4 +24,5 @@ export const languageColors: { [key: string]: string } = {
 	SQL: "#e38c00",
 	HTML: "#e34c26",
 	CSS: "#563d7c",
+	"Vim Script": "#199F4B",
 };
