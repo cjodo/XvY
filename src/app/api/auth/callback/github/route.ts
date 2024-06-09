@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { octokit } from "~/lib/octokit";
+import { Octokit } from "octokit";
 
 export const POST = () => {
 	return NextResponse.json({ status: 200 });
@@ -19,7 +19,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 		redirectURL = "https://xv-y.vercel.app";
 	}
 
-	console.log(env);
+	console.log({ env, code });
 
 	if (code) {
 		const res = await fetch(
@@ -33,18 +33,19 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 		);
 
 		const { access_token } = await res.json();
-		octokit.auth({
-			auth: access_token,
-		});
-
-		const isAuthenticated = await octokit.rest.users.getAuthenticated();
-		console.log("Auth: ", isAuthenticated.data.login);
-
-		let response = NextResponse.redirect(new URL("/dashboard", redirectURL), {
-			status: 302,
-		});
-
 		if (access_token) {
+			const octokit = new Octokit({
+				auth: access_token,
+			});
+
+			const isAuthenticated = await octokit.rest.users.getAuthenticated();
+
+			console.log("Auth: ", isAuthenticated.data.login);
+
+			let response = NextResponse.redirect(new URL("/dashboard", redirectURL), {
+				status: 302,
+			});
+
 			response.cookies.set("access_token", access_token);
 			return response;
 		}

@@ -7,12 +7,12 @@ npm install
 ```
 
 ## TODO
-- [ ] Fully migrate to octokit
-- [ ] Stacked BarChart
 - [x] Migrate to Github OAuth & Next Auth
 - [X] Add Api key exp
+- [ ] Performance improvements with api calls
 - [ ] Add Home Page
 - [ ] Custom Signup page
 - [ ] Styles
 - [ ] Tests
+- [ ] Stacked BarChart
 
