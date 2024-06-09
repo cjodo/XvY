@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { Octokit } from "octokit";
-import { buildBarData } from "../_utils/buildChartData";
+import { buildBarData, buildBarDataParallel } from "../_utils/buildChartData";
 import { ChartData } from "~/types";
 import runtime from "~/lib/runtime";
 
@@ -57,6 +57,7 @@ export default async function User() {
 
   try {
     commits = await buildBarData(repos, token);
+    // commits = await buildBarDataParallel(repos, token);
   } catch (err) {
     console.error(err);
   }

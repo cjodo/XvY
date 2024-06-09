@@ -1,9 +1,51 @@
-import { GitRepoResponse, ChartData, PieSlice, Languages } from "~/types";
+import { GitRepoResponse, ChartData, PieSlice } from "~/types";
 import { OctokitResponse } from "@octokit/types";
 import {
 	getContributorsPerRepo,
 	getPullsPerRepo,
 } from "../_services/getGithubUserData";
+
+export const buildBarDataParallel = async (
+	data: OctokitResponse<GitRepoResponse>[],
+	token: string,
+) => {
+	let commits: ChartData[] = [];
+
+	console.time("parallel");
+
+	const repos = Array.from(data);
+
+	if (repos && repos.length > 0) {
+		const pullsThread = repos.map((repo) =>
+			getPullsPerRepo(repo.name, repo.owner.login, token),
+		);
+		const contibutorsThread = repos.map((repo) =>
+			getContributorsPerRepo(repo.name, repo.owner.login, token),
+		);
+		const pullsResult = await Promise.all(pullsThread);
+		const contributorsResult = await Promise.all(contibutorsThread);
+
+		commits = repos.map((repo, i) => {
+			const pulls = pullsResult[i];
+			const contributors = contributorsResult[i];
+			const numCommits = contributors[0]?.contributions || 0;
+
+			return {
+				name: repo.name,
+				commit: numCommits,
+				repo_url: repo.html_url,
+				issues: repo.open_issues,
+				watchers_count: repo.watchers_count,
+				stargazers_count: repo.stargazers_count,
+				pull_requests: pulls?.length,
+			};
+		});
+	}
+
+	console.timeEnd("parallel");
+
+	return commits;
+};
 
 export const buildBarData = async (
 	data: OctokitResponse<GitRepoResponse>[],
@@ -13,7 +55,7 @@ export const buildBarData = async (
 
 	const repos = Array.from(data);
 
-	console.time("build");
+	console.time("sequential");
 
 	if (repos) {
 		for (let i = 0; i < repos.length; i++) {
@@ -45,6 +87,8 @@ export const buildBarData = async (
 	} else {
 		console.error("no data");
 	}
+
+	console.timeEnd("sequential");
 
 	return commits;
 };
