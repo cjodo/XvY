@@ -1,5 +1,6 @@
 import { Octokit } from "octokit";
 import { OctokitResponse } from "@octokit/types";
+import runtime from "~/lib/runtime";
 
 import { GitRepoResponse } from "~/types";
 
@@ -52,17 +53,19 @@ export const getContributorsPerRepo = async (
   owner: string,
   token: string,
 ) => {
-  const octokit = new Octokit({
-    request: myFetch,
-    auth: token,
-  });
+  const res = await fetch(
+    `${runtime}/api/getContributorsPerRepo?repoName=${repo}&owner=${owner}`,
+    {
+      headers: {
+        Cookie: `access_token=${token}`,
+      },
+      next: { revalidate: 3600 },
+    },
+  );
 
-  const contributors = await octokit.rest.repos.listContributors({
-    repo: repo,
-    owner: owner,
-  });
+  const contributors = await res.json();
 
-  return contributors.data.filter((c) => c.login === owner);
+  return contributors;
 };
 
 export const getPullsPerRepo = async (
@@ -70,16 +73,17 @@ export const getPullsPerRepo = async (
   owner: string,
   token: string,
 ) => {
-  const octokit = new Octokit({
-    request: myFetch,
-    auth: token,
-  });
+  const res = await fetch(
+    `${runtime}/api/getPullsPerRepo?repoName=${repo}&owner=${owner}`,
+    {
+      headers: {
+        Cookie: `access_token=${token}`,
+      },
+      next: { revalidate: 3600 },
+    },
+  );
 
-  const pulls = await octokit.rest.pulls.list({
-    state: "all",
-    owner: owner,
-    repo: repo,
-  });
+  const pulls = await res.json();
 
-  return pulls.data;
+  return pulls;
 };
