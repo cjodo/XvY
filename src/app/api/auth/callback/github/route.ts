@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Octokit } from "octokit";
+import runtime from "~/lib/runtime";
 
 export const POST = () => {
 	return NextResponse.json({ status: 200 });
@@ -9,17 +10,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 	const url = new URL(req.url).searchParams;
 	const code = url.get("code");
 
-	let redirectURL;
-
-	let env = process.env.NODE_ENV;
-
-	if (env === "development") {
-		redirectURL = "http://localhost:3000";
-	} else if (env === "production") {
-		redirectURL = "https://xv-y.vercel.app";
-	}
-
-	console.log({ env, code });
+	let redirectURL = runtime;
 
 	if (code) {
 		const res = await fetch(

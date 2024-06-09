@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { Octokit } from "octokit";
 import { buildBarData } from "../_utils/buildChartData";
 import { ChartData } from "~/types";
+import runtime from "~/lib/runtime";
 
 import Link from "next/link";
 import { Graph } from "../_components/Graph/Graph";
@@ -42,7 +43,7 @@ export default async function User() {
   const headers = new Headers();
 
   headers.set("access_token", token);
-  const res = await fetch("http:localhost:3000/api/getUserData", {
+  const res = await fetch(`${runtime}/api/getUserData`, {
     method: "GET",
     headers: {
       Cookie: `access_token=${token}`,
