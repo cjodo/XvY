@@ -1,25 +1,28 @@
 import { LanguageStatsWithColor } from "~/types";
 import { Group } from "@visx/group";
-import { BarStack } from "@visx/shape";
+import { Bar } from "@visx/shape";
 import { scaleLinear } from "@visx/scale";
-import { Languages } from "./Languages";
+
+import { languageColors } from "./util";
 
 interface Percentage {
 	lang: string;
 	percentage: number;
 }
 const calculatePercentages = (languages: LanguageStatsWithColor) => {
-	const totalBytes = languages["total"].bytes;
 	const result: Percentage[] = [];
-	if (!totalBytes) {
-		return result;
-	}
 
-	Object.keys(languages).forEach((key) => {
-		if (key !== "total") {
-			const percentage = (languages[key]?.bytes / totalBytes) * 100;
+	let totalBytes = 0;
+
+	Object.keys(languages).forEach((lang) => {
+		totalBytes += languages[lang]?.bytes;
+	});
+
+	Object.keys(languages).forEach((lang) => {
+		const percentage = (languages[lang]?.bytes / totalBytes) * 100;
+		if (percentage > 0) {
 			result.push({
-				lang: key,
+				lang: lang,
 				percentage: Math.round(percentage),
 			});
 		}
@@ -38,17 +41,45 @@ export const LanguageBar = ({ languages }: LanguageBarProps) => {
 
 	const percentages: Percentage[] = calculatePercentages(languages);
 
-	const keys = Object.keys(languages).filter((key) => key !== "total");
-	const totalBytes = languages["total"]?.bytes;
+	console.log(percentages, "percentages");
+
+	const keys = Object.keys(languages);
+
 	const xMax = width - 20;
 	const yMax = height - 10;
 
-	if (!totalBytes) return <div>BAD</div>;
+	const xScale = scaleLinear<number>({
+		range: [0, xMax],
+		domain: [0, 100],
+	});
 
+	const yScale = scaleLinear<number>({
+		range: [yMax, 0],
+		domain: [0, 100],
+	});
+
+	let accumulatedPercentage = 0;
+	//horizontal percentage barstack with only one bar
 	return (
 		<div>
 			<svg width={200} height={100}>
-				<Group>{}</Group>
+				<Group left={20}>
+					{percentages.map((d, i) => {
+						const barWidth = xScale(d.percentage);
+						const barX = xScale(accumulatedPercentage);
+						accumulatedPercentage += d.percentage;
+						return (
+							<Bar
+								key={i}
+								x={barX}
+								y={yMax - 20}
+								width={barWidth}
+								height={20}
+								fill={languageColors[d.lang]}
+							/>
+						);
+					})}
+				</Group>
 			</svg>
 		</div>
 	);

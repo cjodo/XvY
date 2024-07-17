@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 export const useResizeLoad = () => {
   const [innerWidth, setInnerWidth] = useState(0);
+
   useEffect(() => {
     const handleUpdate = () => {
       setInnerWidth(window.innerWidth);

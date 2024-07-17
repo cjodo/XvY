@@ -31,14 +31,22 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
 			const isAuthenticated = await octokit.rest.users.getAuthenticated();
 
-			console.log("Auth: ", isAuthenticated.data.login);
+			if (isAuthenticated.data.login) {
+				let response = NextResponse.redirect(
+					new URL("/dashboard", redirectURL),
+					{
+						status: 302,
+					},
+				);
 
-			let response = NextResponse.redirect(new URL("/dashboard", redirectURL), {
-				status: 302,
-			});
-
-			response.cookies.set("access_token", access_token);
-			return response;
+				response.cookies.set("access_token", access_token);
+				return response;
+			} else {
+				return NextResponse.json(
+					{ error: "Failed to authenticate, please try again later" },
+					{ status: 500 },
+				);
+			}
 		}
 	}
 	return NextResponse.json({ status: 200 });

@@ -28,8 +28,7 @@ export const aggregateRepoLanguages = async (
   owner: string,
   token: string,
 ): Promise<LanguageStatsWithColor> => {
-  const aggregatedLanguages: LanguageStatsWithColor = { total: { bytes: 0 } };
-  let totalBytes = 0;
+  const aggregatedLanguages: LanguageStatsWithColor = {};
 
   for (const repo of repos) {
     try {
@@ -37,7 +36,6 @@ export const aggregateRepoLanguages = async (
       for (const [language, bytes] of Object.entries(languages)) {
         if (aggregatedLanguages[language]) {
           aggregatedLanguages[language].bytes += bytes;
-          totalBytes += bytes;
         } else {
           aggregatedLanguages[language] = {
             bytes,
@@ -52,8 +50,6 @@ export const aggregateRepoLanguages = async (
       );
     }
   }
-
-  aggregatedLanguages["total"].bytes = totalBytes;
 
   return aggregatedLanguages;
 };

@@ -13,7 +13,7 @@ export const buildBarDataParallel = async (
 
 	console.time("parallel");
 
-	const repos = Array.from(data);
+	const repos = data;
 
 	if (repos && repos.length > 0) {
 		const pullsThread = repos.map((repo) =>

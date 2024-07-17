@@ -56,8 +56,8 @@ export default async function User() {
   let commits: ChartData[] = [];
 
   try {
-    // commits = await buildBarData(repos, token);
     commits = await buildBarDataParallel(repos, token);
+    // commits = await buildBarData(repos, token);
   } catch (err) {
     console.error(err);
   }

@@ -7,7 +7,6 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
 	const repoName = searchParams.get("repoName");
 	const owner = searchParams.get("owner");
-	console.log({ repoName, owner, token });
 	if (!repoName || !owner || !token) {
 		return NextResponse.json(
 			{ error: "missing required params" },

@@ -13,7 +13,6 @@ export const Languages = async ({ data, user, token }: LanguagesProps) => {
 
   try {
     aggregatedLanguages = await aggregateRepoLanguages(data, user, token);
-    console.log(aggregatedLanguages);
   } catch (error) {
     console.error("Failed to aggregate language stats: ", error);
   }
