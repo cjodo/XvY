@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Group } from "@visx/group";
@@ -49,6 +48,12 @@ export const BarChart = ({ data }: BarStackProps) => {
   });
 
   let tooltipTimeout: number;
+
+  const handleToolTipMouseLeave = () => {
+    tooltipTimeout = window.setTimeout(() => {
+      hideTooltip();
+    }, 300);
+  };
 
   const margin = {
     top: 10,
@@ -102,11 +107,7 @@ export const BarChart = ({ data }: BarStackProps) => {
                 fill={Colors.chart.blue}
                 rx={5}
                 className="bar"
-                onMouseLeave={() => {
-                  tooltipTimeout = window.setTimeout(() => {
-                    hideTooltip();
-                  }, 300);
-                }}
+                onMouseLeave={handleToolTipMouseLeave}
                 onClick={() => {
                   const repo = d.name;
                   router.push(`/dashboard/${repo}`);

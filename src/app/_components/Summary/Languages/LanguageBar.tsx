@@ -1,7 +1,12 @@
+"use client";
+
 import { LanguageStatsWithColor } from "~/types";
 import { Group } from "@visx/group";
 import { Bar } from "@visx/shape";
 import { scaleLinear } from "@visx/scale";
+
+import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
+import { localPoint } from "@visx/event";
 
 import { languageColors } from "./util";
 
@@ -53,16 +58,39 @@ export const LanguageBar = ({ languages }: LanguageBarProps) => {
 		domain: [0, 100],
 	});
 
-	const yScale = scaleLinear<number>({
-		range: [yMax, 0],
-		domain: [0, 100],
+	const { containerRef, TooltipInPortal } = useTooltipInPortal({
+		scroll: true,
 	});
+
+	const {
+		tooltipOpen,
+		tooltipLeft,
+		tooltipTop,
+		tooltipData,
+		hideTooltip,
+		showTooltip,
+	} = useTooltip<Percentage>();
+
+	const tooltipStyles = {
+		...defaultStyles,
+		minWidth: 60,
+		backgroundColor: "rgba(0,0,0,0.7)",
+		color: "white",
+	};
+
+	let tooltipTimeout: number;
+
+	const handleMouseLeave = () => {
+		tooltipTimeout = window.setTimeout(() => {
+			hideTooltip();
+		}, 300);
+	};
 
 	let accumulatedPercentage = 0;
 	//horizontal percentage barstack with only one bar
 	return (
 		<div>
-			<svg width={200} height={100}>
+			<svg ref={containerRef} width={200} height={100}>
 				<Group left={20}>
 					{percentages.map((d, i) => {
 						const barWidth = xScale(d.percentage);
@@ -76,11 +104,36 @@ export const LanguageBar = ({ languages }: LanguageBarProps) => {
 								width={barWidth}
 								height={20}
 								fill={languageColors[d.lang]}
+								onMouseLeave={handleMouseLeave}
+								onMouseMove={(event) => {
+									if (tooltipTimeout) clearTimeout(tooltipTimeout);
+									const eventSvgCoords = localPoint(event);
+									const left = eventSvgCoords?.x;
+									showTooltip({
+										tooltipData: d,
+										tooltipTop: eventSvgCoords?.y,
+										tooltipLeft: left,
+									});
+								}}
 							/>
 						);
 					})}
 				</Group>
 			</svg>
+			{tooltipOpen && tooltipData && (
+				<TooltipInPortal
+					top={tooltipTop}
+					left={tooltipLeft}
+					style={tooltipStyles}
+				>
+					<div>
+						<strong>{tooltipData.lang}</strong>
+					</div>
+					<div>
+						<strong>{tooltipData.percentage}%</strong>
+					</div>
+				</TooltipInPortal>
+			)}
 		</div>
 	);
 };
